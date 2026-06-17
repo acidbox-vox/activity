@@ -1,6 +1,6 @@
 window.onload = loadAdminEvents;
 
-async function createEvent() {
+async function createNewEvent() {
 
   const eventNameEl = document.getElementById("eventName");
   const eventDateEl = document.getElementById("eventDate");
