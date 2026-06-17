@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>ส่งยอด</title>
+</head>
+
+<body>
+
+<h2>ส่งยอดกิจกรรม</h2>
+
+<select
+id="deptSelect">
+
+<option>
+เลือกแผนก
+</option>
+
+</select>
+
+<button
+onclick="
+loadDepartment()
+">
+
+โหลดรายชื่อ
+
+</button>
+
+<hr>
+
+<div
+id="personTable">
+
+</div>
+
+<br>
+
+<button
+onclick="
+submitReport()
+">
+
+ส่งยอด
+
+</button>
+
+<script src="../js/apiConfig.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/activityForm.js"></script>
+
+</body>
+
+</html>
