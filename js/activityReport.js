@@ -34,10 +34,40 @@ async function loadSummary() {
     <h3>รวม ${result.total}</h3>
   `;
 
-  // The backend has always returned this list, but the page never
-  // rendered it before — show who didn't attend and why.
+  renderDeptStatus(result.submittedDepts || [], result.pendingDepts || []);
+  renderAbsentList(result.absentList || []);
+
+}
+
+function renderDeptStatus(submittedDepts, pendingDepts) {
+
+  const box = document.getElementById("deptStatus");
+  if (!box) return;
+
+  let html = '<h4>สถานะการส่งยอดของแผนก</h4><table border="1"><tr><th>แผนก</th><th>สถานะ</th></tr>';
+
+  submittedDepts.forEach(d => {
+    html += `<tr><td>${escapeHtml(d)}</td><td><span class="badge badge-open">ส่งแล้ว</span></td></tr>`;
+  });
+  pendingDepts.forEach(d => {
+    html += `<tr><td>${escapeHtml(d)}</td><td><span class="badge badge-pending">ยังไม่ส่ง</span></td></tr>`;
+  });
+
+  html += "</table>";
+
+  if (!submittedDepts.length && !pendingDepts.length) {
+    html += "<p>ไม่มีข้อมูลแผนก</p>";
+  }
+
+  box.innerHTML = html;
+
+}
+
+function renderAbsentList(absentList) {
+
   const absentBox = document.getElementById("absentDetail");
-  if (!result.absentList || !result.absentList.length) {
+
+  if (!absentList.length) {
     absentBox.innerHTML = "<p>ไม่มีรายชื่อผู้ไม่เข้าร่วม</p>";
     return;
   }
@@ -51,7 +81,7 @@ async function loadSummary() {
         <th>เหตุผล</th>
       </tr>
   `;
-  result.absentList.forEach(p => {
+  absentList.forEach(p => {
     html += `
       <tr>
         <td>${escapeHtml(p.name)}</td>

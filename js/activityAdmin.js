@@ -77,7 +77,7 @@ async function loadAdminEvents() {
     html += `
       <tr>
         <td>${escapeHtml(ev.name)}</td>
-        <td>${escapeHtml(ev.eventDate)}</td>
+        <td>${formatEventDateRange(ev.eventDate, ev.closeDate)}</td>
         <td>${badge}</td>
         <td>
           ${toggleButton}

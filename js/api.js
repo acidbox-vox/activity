@@ -1,4 +1,70 @@
+// --- Top-of-page loading bar shown while any api() call is in flight ---
+// There's no real byte-level progress for a single JSON fetch, so this
+// is an indeterminate bar: it creeps toward ~85% while waiting, then
+// snaps to 100% and fades out once a response (success or failure)
+// comes back. A counter handles pages that fire several api() calls
+// at once (e.g. the form page loads event info + departments together).
+let __activeRequests = 0;
+let __barInterval = null;
+
+function __getLoadingBar() {
+  let bar = document.getElementById("__loadingBar");
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.id = "__loadingBar";
+    const fill = document.createElement("div");
+    fill.id = "__loadingBarFill";
+    bar.appendChild(fill);
+    document.body.appendChild(bar);
+  }
+  return bar;
+}
+
+function __showLoadingBar() {
+  __activeRequests++;
+  if (__activeRequests > 1) return; // a bar is already showing
+
+  const bar = __getLoadingBar();
+  const fill = document.getElementById("__loadingBarFill");
+
+  clearInterval(__barInterval);
+  bar.style.opacity = "1";
+  fill.style.transition = "none";
+  fill.style.width = "0%";
+
+  let pct = 0;
+  requestAnimationFrame(() => {
+    fill.style.transition = "width 0.3s ease";
+    pct = 20;
+    fill.style.width = pct + "%";
+  });
+
+  __barInterval = setInterval(() => {
+    pct += (85 - pct) * 0.15;
+    fill.style.width = pct + "%";
+  }, 250);
+}
+
+function __hideLoadingBar() {
+  __activeRequests = Math.max(0, __activeRequests - 1);
+  if (__activeRequests > 0) return; // other api() calls still pending
+
+  clearInterval(__barInterval);
+  const bar = document.getElementById("__loadingBar");
+  const fill = document.getElementById("__loadingBarFill");
+  if (!bar || !fill) return;
+
+  fill.style.transition = "width 0.2s ease";
+  fill.style.width = "100%";
+  setTimeout(() => {
+    bar.style.opacity = "0";
+  }, 250);
+}
+
 async function api(action, data = {}) {
+
+  __showLoadingBar();
+  try {
 
   let res;
   try {
@@ -52,6 +118,10 @@ async function api(action, data = {}) {
     };
   }
 
+  } finally {
+    __hideLoadingBar();
+  }
+
 }
 
 // Shared helper: escape text before interpolating it into innerHTML.
@@ -74,4 +144,46 @@ async function getEventInfo(eventId) {
   if (!eventId) return null;
   const result = await api("getEvent", { eventId });
   return result.success ? result.data : null;
+}
+
+// Shared helper: format a date value as Thai day/month/Buddhist-year.
+// Returns null if the value can't be parsed as a date.
+const THAI_MONTHS = [
+  "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+  "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+];
+
+function formatThaiDate(value) {
+  if (!value) return null;
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return null;
+  return {
+    day: d.getDate(),
+    month: THAI_MONTHS[d.getMonth()],
+    year: d.getFullYear() + 543,
+    hh: String(d.getHours()).padStart(2, "0"),
+    mm: String(d.getMinutes()).padStart(2, "0"),
+    dateStr: `${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear() + 543}`
+  };
+}
+
+// Shared helper: format an event's date range for display, e.g.
+// "20 มิถุนายน 2569 เวลา 08:32 ถึง 20:32". Falls back gracefully when
+// closeDate is missing, or shows the close date too if it's a
+// different day than the start date.
+function formatEventDateRange(startValue, endValue) {
+  const start = formatThaiDate(startValue);
+  if (!start) return "-";
+
+  let result = `${start.dateStr} เวลา ${start.hh}:${start.mm}`;
+
+  const end = formatThaiDate(endValue);
+  if (end) {
+    result += ` ถึง ${end.hh}:${end.mm}`;
+    if (end.dateStr !== start.dateStr) {
+      result += ` (${end.dateStr})`;
+    }
+  }
+
+  return result;
 }

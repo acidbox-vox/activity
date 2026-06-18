@@ -33,7 +33,7 @@ async function loadEvents() {
     box.innerHTML += `
       <div class="event-card">
         <h3>${escapeHtml(ev.name)} ${badge}</h3>
-        <div>วันที่ : ${escapeHtml(ev.eventDate)}</div>
+        <div>วันที่ : ${formatEventDateRange(ev.eventDate, ev.closeDate)}</div>
         <br>
         ${submitButton}
         <button onclick="location.href='activity-report.html?id=${encodeURIComponent(ev.id)}'">ดูรายงาน</button>

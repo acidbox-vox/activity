@@ -17,11 +17,32 @@ function getEventSummary(eventId) {
       });
     }
   });
+
+  // Which departments have submitted for this event, and which
+  // haven't yet -- cross-reference the full department list against
+  // EventSubmit rows for this specific eventId.
+  const deptSh = SpreadsheetApp.getActive().getSheetByName("Departments");
+  const deptRows = deptSh.getDataRange().getValues();
+  deptRows.shift();
+  const allDepts = [...new Set(deptRows.map(r => r[0]))];
+
+  const submitSh = SpreadsheetApp.getActive().getSheetByName("EventSubmit");
+  const submitRows = submitSh.getDataRange().getValues();
+  const submittedSet = new Set();
+  submitRows.forEach(r => {
+    if (r[0] === eventId) submittedSet.add(r[1]);
+  });
+
+  const submittedDepts = allDepts.filter(d => submittedSet.has(d));
+  const pendingDepts = allDepts.filter(d => !submittedSet.has(d));
+
   return {
     success: true,
     join,
     absent,
     total: join + absent,
-    absentList
+    absentList,
+    submittedDepts,
+    pendingDepts
   };
 }

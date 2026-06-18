@@ -50,6 +50,10 @@ button:disabled {
   background: #b71c1c;
 }
 
+.badge-pending {
+  background: #ef6c00;
+}
+
 .error-text {
   color: #b71c1c;
 }
@@ -58,4 +62,28 @@ button:disabled {
   border: 1px solid #ddd;
   padding: 15px;
   margin: 10px 0;
+}
+
+/* Top-of-page loading bar, shown automatically while any api() call
+   is in flight (see js/api.js). Indeterminate progress -- there's no
+   real byte-level signal from a single JSON fetch, it just creeps
+   forward to show something is happening, then snaps to 100% and
+   fades out when the response arrives. */
+#__loadingBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: transparent;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+#__loadingBarFill {
+  height: 100%;
+  width: 0%;
+  background: #2e7d32;
 }
