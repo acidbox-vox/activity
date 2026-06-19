@@ -52,6 +52,13 @@ async function loadDepartments() {
     select.innerHTML += `<option>${escapeHtml(d)}</option>`;
   });
 
+  // Pre-select the department matching the unit the person logged in
+  // as, as a convenience -- they can still pick a different one.
+  const unitName = getAuth().unitName;
+  if (unitName && result.data.includes(unitName)) {
+    select.value = unitName;
+  }
+
 }
 
 async function loadDepartment() {

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เข้าสู่ระบบแอดมิน - Activity System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600;700&family=Sarabun:wght@400;500;600&family=Bai+Jamjuree:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/activity.css">
+<script src="../js/apiConfig.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+</head>
+<body>
+
+<div class="login-shell">
+  <div class="login-card">
+    <div class="login-eyebrow">ขั้นตอนเพิ่มเติม</div>
+    <h1>รหัสผู้ดูแลระบบ</h1>
+    <p class="login-sub">กรอกรหัสแอดมินเพื่อเข้าหน้าจัดการกิจกรรม</p>
+
+    <div class="field" style="display:flex; justify-content:center;">
+      <input type="password" id="adminCodeInput" autocomplete="off" style="text-align:center; font-family:var(--font-mono); letter-spacing: 0.2em;">
+    </div>
+
+    <p id="adminLoginError" class="error-text"></p>
+
+    <button onclick="submitAdminCode()">เข้าระบบแอดมิน</button>
+
+    <p class="login-footnote"><a href="activities.html">&larr; กลับไปหน้ารายการกิจกรรม</a></p>
+  </div>
+</div>
+
+<script src="../js/adminLogin.js"></script>
+
+</body>
+</html>

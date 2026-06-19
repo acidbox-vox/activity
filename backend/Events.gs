@@ -1,4 +1,7 @@
 function createEvent(data) {
+  const adminCheck = requireAdmin(data.adminCode);
+  if (adminCheck) return adminCheck;
+
   const eventName = (data.eventName || "").trim();
   if (!eventName) {
     return {
@@ -86,7 +89,10 @@ function getEvent(eventId) {
   };
 }
 
-function closeEvent(eventId) {
+function closeEvent(eventId, adminCode) {
+  const adminCheck = requireAdmin(adminCode);
+  if (adminCheck) return adminCheck;
+
   const sh = SpreadsheetApp.getActive().getSheetByName("Events");
   const rows = sh.getDataRange().getValues();
   for (let i = 1; i < rows.length; i++) {
@@ -102,7 +108,10 @@ function closeEvent(eventId) {
   };
 }
 
-function reopenEvent(eventId) {
+function reopenEvent(eventId, adminCode) {
+  const adminCheck = requireAdmin(adminCode);
+  if (adminCheck) return adminCheck;
+
   const sh = SpreadsheetApp.getActive().getSheetByName("Events");
   const rows = sh.getDataRange().getValues();
   for (let i = 1; i < rows.length; i++) {

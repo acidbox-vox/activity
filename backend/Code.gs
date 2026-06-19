@@ -12,6 +12,12 @@ function doPost(e) {
       case "getEvent":
         result = getEvent(req.eventId);
         break;
+      case "checkUnitCode":
+        result = checkUnitCode(req.code);
+        break;
+      case "checkAdminCode":
+        result = checkAdminCode(req.code);
+        break;
       case "getDepartments":
         result = getDepartments();
         break;
@@ -25,10 +31,10 @@ function doPost(e) {
         result = getEventSummary(req.eventId);
         break;
       case "closeEvent":
-        result = closeEvent(req.eventId);
+        result = closeEvent(req.eventId, req.adminCode);
         break;
       case "reopenEvent":
-        result = reopenEvent(req.eventId);
+        result = reopenEvent(req.eventId, req.adminCode);
         break;
       default:
         result = {

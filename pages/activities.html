@@ -1,15 +1,29 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="th">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>กิจกรรม</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600;700&family=Sarabun:wght@400;500;600&family=Bai+Jamjuree:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/activity.css">
+<script src="../js/apiConfig.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script>if (!requireUnitAuth()) document.documentElement.style.display = "none";</script>
 </head>
-
 <body>
 
-<nav><a href="../index.html">หน้าแรก</a> | <a href="activity-admin.html">จัดการกิจกรรม</a></nav>
+<div class="topbar">
+  <div class="brand">ระบบส่งยอดกิจกรรม <span class="unit-chip" id="unitChip"></span></div>
+  <nav>
+    <a href="admin-login.html">จัดการกิจกรรม (แอดมิน)</a>
+    <a href="#" onclick="logoutAndRedirect(); return false;">ออกจากระบบ</a>
+  </nav>
+</div>
+<script>document.getElementById("unitChip").textContent = getAuth().unitName;</script>
+
+<div class="page">
 
 <h2>รายการกิจกรรม</h2>
 
@@ -19,10 +33,9 @@
 
 </div>
 
-<script src="../js/apiConfig.js"></script>
-<script src="../js/api.js"></script>
+</div>
+
 <script src="../js/activities.js"></script>
 
 </body>
-
 </html>

@@ -1,93 +1,64 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="th">
 <head>
 <meta charset="utf-8">
-<title>สร้างกิจกรรม</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>จัดการกิจกรรม</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600;700&family=Sarabun:wght@400;500;600&family=Bai+Jamjuree:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/activity.css">
+<script src="../js/apiConfig.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script>if (!requireAdminAuth()) document.documentElement.style.display = "none";</script>
 </head>
-
 <body>
 
-<nav><a href="../index.html">หน้าแรก</a> | <a href="activities.html">รายการกิจกรรม</a></nav>
+<div class="topbar">
+  <div class="brand">ระบบส่งยอดกิจกรรม <span class="unit-chip">แอดมิน</span></div>
+  <nav>
+    <a href="activities.html">รายการกิจกรรม</a>
+    <a href="#" onclick="logoutAndRedirect(); return false;">ออกจากระบบ</a>
+  </nav>
+</div>
+
+<div class="page">
 
 <h2>สร้างกิจกรรม</h2>
 
-<div>
+<div class="card">
 
+<div class="field">
 <label>ชื่อกิจกรรม</label>
-<br>
-
-<input
-id="eventName"
-style="width:400px">
-
+<input id="eventName" style="width:100%; max-width:none;">
 </div>
 
-<br>
-
-<div>
-
+<div class="field">
 <label>วันเวลาเริ่ม</label>
-<br>
-
-<input
-type="datetime-local"
-id="eventDate">
-
+<input type="datetime-local" id="eventDate">
 </div>
 
-<br>
-
-<div>
-
+<div class="field">
 <label>วันเวลาปิดรับรายงาน</label>
-<br>
-
-<input
-type="datetime-local"
-id="closeDate">
-
+<input type="datetime-local" id="closeDate">
 </div>
 
-<br>
-
-<div>
-
+<div class="field">
 <label>รายละเอียด</label>
-<br>
-
-<textarea
-id="detail"
-rows="5"
-cols="50">
-</textarea>
-
+<textarea id="detail" rows="5"></textarea>
 </div>
 
-<br>
+<button onclick="createNewEvent()">สร้างกิจกรรม</button>
 
-<button
-onclick="createNewEvent()">
-
-สร้างกิจกรรม
-
-</button>
-
-<hr>
+</div>
 
 <h2>จัดการกิจกรรมที่มีอยู่</h2>
 
-<div id="adminEventList">
-
-กำลังโหลด...
+<div class="card" id="adminEventList">กำลังโหลด...</div>
 
 </div>
 
-<script src="../js/apiConfig.js"></script>
-<script src="../js/api.js"></script>
 <script src="../js/activityAdmin.js"></script>
 
 </body>
-
 </html>

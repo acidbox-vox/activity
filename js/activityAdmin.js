@@ -9,7 +9,8 @@ async function createNewEvent() {
     eventName: eventNameEl.value.trim(),
     eventDate: eventDateEl.value,
     closeDate: document.getElementById("closeDate").value,
-    detail: document.getElementById("detail").value
+    detail: document.getElementById("detail").value,
+    adminCode: getAuth().adminCode
   };
 
   if (!data.eventName) {
@@ -94,7 +95,7 @@ async function loadAdminEvents() {
 
 async function toggleEvent(eventId, action) {
   const apiAction = action === "close" ? "closeEvent" : "reopenEvent";
-  const result = await api(apiAction, { eventId });
+  const result = await api(apiAction, { eventId, adminCode: getAuth().adminCode });
   if (!result.success) {
     alert("ทำรายการไม่สำเร็จ: " + (result.message || result.error || ""));
     return;

@@ -1,74 +1,353 @@
+/* ============================================================
+   Design tokens
+   Subject: an internal unit/extension-code attendance system.
+   Login identifies people by their phone extension, so the
+   signature motif is the switchboard/extension-window look on
+   the login screen; everything else stays quiet and procedural.
+   ============================================================ */
+:root {
+  --navy-900: #102A43;
+  --navy-700: #1E4F77;
+  --navy-050: #EAF1F8;
+  --amber-600: #C17F0A;
+  --amber-050: #FBF1DE;
+  --success-600: #1B7A4D;
+  --success-050: #E6F3EC;
+  --danger-600: #AD3128;
+  --danger-050: #FBEAE8;
+  --ink-900: #16212E;
+  --ink-500: #5B6B7C;
+  --paper-0: #FFFFFF;
+  --paper-50: #F6F8FA;
+  --line-200: #DDE3EA;
+
+  --font-display: "Mitr", "Sarabun", system-ui, sans-serif;
+  --font-body: "Sarabun", system-ui, sans-serif;
+  --font-mono: "Bai Jamjuree", "Sarabun", monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 1px 2px rgba(16, 42, 67, 0.06), 0 4px 16px rgba(16, 42, 67, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 700px;
+  font-family: var(--font-body);
+  color: var(--ink-900);
+  background: var(--paper-50);
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-7);
+  line-height: 1.55;
+}
+
+.page {
+  max-width: 720px;
   margin: 0 auto;
 }
 
-nav {
-  margin-bottom: 20px;
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--navy-900);
+  line-height: 1.3;
+  margin: 0 0 var(--space-3);
 }
 
-nav a {
-  margin-right: 15px;
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--space-6); }
+h3 { font-size: 1.1rem; }
+h4 { font-size: 0.95rem; color: var(--ink-500); text-transform: uppercase; letter-spacing: 0.04em; }
+
+p { margin: 0 0 var(--space-3); }
+
+a {
+  color: var(--navy-700);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ---------- top bar ---------- */
+.topbar {
+  background: var(--navy-900);
+  margin: 0 calc(-1 * var(--space-4)) var(--space-6);
+  padding: var(--space-4) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 10px;
+.topbar .brand {
+  font-family: var(--font-display);
+  color: var(--paper-0);
+  font-size: 1.05rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-table th, table td {
-  padding: 6px 10px;
-  text-align: left;
-}
-
-button {
-  cursor: pointer;
-  padding: 6px 14px;
-}
-
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.badge {
-  display: inline-block;
+.topbar .brand .unit-chip {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.12);
+  color: var(--amber-050);
   padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.85em;
-  color: #fff;
+  border-radius: var(--radius-sm);
 }
 
-.badge-open {
-  background: #2e7d32;
+.topbar nav {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
 }
 
-.badge-closed {
-  background: #b71c1c;
+.topbar nav a {
+  color: var(--navy-050);
+  font-size: 0.92rem;
 }
+.topbar nav a:hover { color: var(--paper-0); }
 
-.badge-pending {
-  background: #ef6c00;
-}
-
-.error-text {
-  color: #b71c1c;
+/* ---------- cards ---------- */
+.card {
+  background: var(--paper-0);
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
 }
 
 .event-card {
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin: 10px 0;
+  background: var(--paper-0);
+  border: 1px solid var(--line-200);
+  border-left: 4px solid var(--navy-700);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  margin: var(--space-4) 0;
+  box-shadow: var(--shadow-card);
+}
+.event-card.is-closed { border-left-color: var(--ink-500); }
+
+/* ---------- buttons ---------- */
+button, .btn {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: var(--navy-900);
+  color: var(--paper-0);
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+button:hover { background: var(--navy-700); }
+button:active { transform: translateY(1px); }
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
-/* Top-of-page loading bar, shown automatically while any api() call
-   is in flight (see js/api.js). Indeterminate progress -- there's no
-   real byte-level signal from a single JSON fetch, it just creeps
-   forward to show something is happening, then snaps to 100% and
-   fades out when the response arrives. */
+button.secondary {
+  background: var(--paper-0);
+  color: var(--navy-900);
+  border: 1px solid var(--line-200);
+}
+button.secondary:hover { background: var(--navy-050); }
+
+button.danger {
+  background: var(--paper-0);
+  color: var(--danger-600);
+  border: 1px solid var(--danger-600);
+}
+button.danger:hover { background: var(--danger-050); }
+
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid var(--amber-600);
+  outline-offset: 2px;
+}
+
+/* ---------- forms ---------- */
+label {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--ink-500);
+  margin-bottom: var(--space-1);
+}
+
+input[type="text"], input[type="password"], input[type="datetime-local"], select, textarea {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ink-900);
+  background: var(--paper-0);
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  width: 100%;
+  max-width: 420px;
+}
+textarea { max-width: 100%; }
+
+.field {
+  margin-bottom: var(--space-4);
+}
+
+/* ---------- table ---------- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: var(--space-3);
+  font-size: 0.95rem;
+}
+table th {
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--line-200);
+  padding: var(--space-2) var(--space-3);
+}
+table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--line-200);
+}
+table tr:last-child td { border-bottom: none; }
+
+/* ---------- badges ---------- */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.badge-open { background: var(--success-050); color: var(--success-600); }
+.badge-closed { background: var(--danger-050); color: var(--danger-600); }
+.badge-pending { background: var(--amber-050); color: var(--amber-600); }
+
+.error-text { color: var(--danger-600); }
+.muted { color: var(--ink-500); }
+
+/* ============================================================
+   Login screen — the signature element.
+   Five extension-window boxes, monospace digits, an amber glow
+   on the active box (a switchboard signal lamp), and a dotted
+   "line" tying the boxes together like a patch cable.
+   ============================================================ */
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 calc(-1 * var(--space-4));
+  padding: var(--space-4);
+}
+
+.login-card {
+  background: var(--paper-0);
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-7) var(--space-6);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.login-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-500);
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+}
+
+.login-card h1 {
+  margin-bottom: var(--space-2);
+}
+
+.login-card .login-sub {
+  color: var(--ink-500);
+  font-size: 0.92rem;
+  margin-bottom: var(--space-6);
+}
+
+.code-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  position: relative;
+}
+
+.code-row::before {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 50%;
+  height: 1px;
+  background: repeating-linear-gradient(to right, var(--line-200) 0 4px, transparent 4px 8px);
+  z-index: 0;
+}
+
+.code-box {
+  position: relative;
+  z-index: 1;
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--navy-900);
+  background: var(--paper-50);
+  border: 2px solid var(--line-200);
+  border-radius: var(--radius-md);
+  padding: 0;
+}
+
+.code-box:focus {
+  outline: none;
+  border-color: var(--amber-600);
+  background: var(--amber-050);
+  box-shadow: 0 0 0 4px rgba(193, 127, 10, 0.18);
+}
+
+.login-card button {
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 1rem;
+}
+
+.login-footnote {
+  margin-top: var(--space-5);
+  font-size: 0.82rem;
+  color: var(--ink-500);
+}
+
+/* ---------- top-of-page loading bar ---------- */
 #__loadingBar {
   position: fixed;
   top: 0;
@@ -81,9 +360,24 @@ button:disabled {
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
-
 #__loadingBarFill {
   height: 100%;
   width: 0%;
-  background: #2e7d32;
+  background: var(--amber-600);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 480px) {
+  .code-box { width: 40px; height: 50px; font-size: 1.25rem; }
+  .topbar { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+@media print {
+  .topbar, button, nav { display: none !important; }
+  body { background: #fff; }
+  .card, .event-card { box-shadow: none; border-color: #999; }
 }

@@ -1,43 +1,45 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="th">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>รายงาน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600;700&family=Sarabun:wght@400;500;600&family=Bai+Jamjuree:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/activity.css">
+<script src="../js/apiConfig.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script>if (!requireUnitAuth()) document.documentElement.style.display = "none";</script>
 </head>
-
 <body>
 
-<nav><a href="../index.html">หน้าแรก</a> | <a href="activities.html">รายการกิจกรรม</a></nav>
+<div class="topbar">
+  <div class="brand">ระบบส่งยอดกิจกรรม <span class="unit-chip" id="unitChip"></span></div>
+  <nav>
+    <a href="activities.html">รายการกิจกรรม</a>
+    <a href="#" onclick="logoutAndRedirect(); return false;">ออกจากระบบ</a>
+  </nav>
+</div>
+<script>document.getElementById("unitChip").textContent = getAuth().unitName;</script>
 
-<h2>
-รายงานกิจกรรม
-</h2>
+<div class="page">
 
-<div id="eventTitle"></div>
+<h2>รายงานกิจกรรม</h2>
 
-<div id="summary">
+<div class="card" id="eventTitle"></div>
+
+<div class="card" id="summary"></div>
+
+<div class="card" id="deptStatus"></div>
+
+<div class="card" id="absentDetail"></div>
+
+<button class="secondary" onclick="window.print()">&#128424; พิมพ์รายงาน</button>
 
 </div>
 
-<div id="deptStatus"></div>
-
-<div id="absentDetail"></div>
-
-<button
-onclick="
-window.print()
-">
-
-🖨 พิมพ์รายงาน
-
-</button>
-
-<script src="../js/apiConfig.js"></script>
-<script src="../js/api.js"></script>
 <script src="../js/activityReport.js"></script>
 
 </body>
-
 </html>

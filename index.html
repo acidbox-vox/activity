@@ -1,20 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="utf-8">
-<title>Activity System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เข้าสู่ระบบ - Activity System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600;700&family=Sarabun:wght@400;500;600&family=Bai+Jamjuree:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/activity.css">
 </head>
 <body>
 
-<h1>Activity System</h1>
+<div class="login-shell">
+  <div class="login-card">
+    <div class="login-eyebrow">ระบบส่งยอดกิจกรรม</div>
+    <h1>ป้อนเบอร์ต่อหน่วย</h1>
+    <p class="login-sub">กรอกเบอร์ต่อ 5 หลักของหน่วยท่าน เพื่อเข้าใช้งาน</p>
 
-<nav>
-  <a href="pages/activities.html">รายการกิจกรรม</a>
-  <a href="pages/activity-admin.html">จัดการกิจกรรม (แอดมิน)</a>
-</nav>
+    <div class="code-row">
+      <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="off">
+      <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="off">
+      <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="off">
+      <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="off">
+      <input type="text" class="code-box" maxlength="1" inputmode="numeric" autocomplete="off">
+    </div>
 
-<p>เลือกเมนูด้านบนเพื่อเริ่มใช้งาน</p>
+    <p id="loginError" class="error-text"></p>
+
+    <button onclick="trySubmit()">เข้าใช้งาน</button>
+
+    <p class="login-footnote">ไม่ทราบเบอร์ต่อหน่วย ติดต่อเจ้าหน้าที่ดูแลระบบ</p>
+  </div>
+</div>
+
+<script src="js/apiConfig.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/login.js"></script>
 
 </body>
 </html>
