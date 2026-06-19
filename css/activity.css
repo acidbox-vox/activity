@@ -366,18 +366,115 @@ table tr:last-child td { border-bottom: none; }
   background: var(--amber-600);
 }
 
+/* ---------- action bar (bottom of report page) ---------- */
+.action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-5) 0 var(--space-7);
+}
+
+/* ---------- report stat display ---------- */
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-1);
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--ink-900);
+  line-height: 1;
+}
+
+/* ---------- print-only header (event name + print date) ---------- */
+.print-header {
+  display: none; /* hidden on screen; shown only inside @media print */
+}
+
 /* ---------- responsive ---------- */
 @media (max-width: 480px) {
   .code-box { width: 40px; height: 50px; font-size: 1.25rem; }
   .topbar { flex-direction: column; align-items: flex-start; }
+  .action-bar { flex-direction: column; }
+  .action-bar button { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
 
+/* =============================================================
+   Print styles
+   
+   The print buttons call printMode('join'|'absent'|'dept'|'all')
+   which sets data-print-mode on <body> before calling
+   window.print(), then removes it afterwards.
+   
+   Each .report-section has a data-section attribute matching
+   one of those mode names.  When a specific mode is active,
+   only the matching section is visible; the "all" mode shows
+   everything.
+   ============================================================= */
 @media print {
-  .topbar, button, nav { display: none !important; }
-  body { background: #fff; }
-  .card, .event-card { box-shadow: none; border-color: #999; }
+
+  /* hide every bit of UI chrome */
+  .topbar, .action-bar, button, nav,
+  #__loadingBar { display: none !important; }
+
+  body {
+    background: #fff;
+    padding: 0;
+    font-size: 11pt;
+  }
+
+  .card, .event-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    page-break-inside: avoid;
+  }
+
+  /* summary stats are always printed */
+  #eventTitle, #summary { display: block !important; }
+
+  /* print-only header */
+  .print-header {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 10pt;
+    color: #555;
+    margin-bottom: 8pt;
+    padding-bottom: 4pt;
+    border-bottom: 1px solid #ccc;
+  }
+
+  /* ----- mode: all (default, no attribute) ----- */
+  body:not([data-print-mode]) .report-section,
+  body[data-print-mode="all"] .report-section {
+    display: block !important;
+  }
+
+  /* ----- mode: join ----- */
+  body[data-print-mode="join"] .report-section[data-section="join"] { display: block !important; }
+  body[data-print-mode="join"] .report-section:not([data-section="join"]) { display: none !important; }
+
+  /* ----- mode: absent ----- */
+  body[data-print-mode="absent"] .report-section[data-section="absent"] { display: block !important; }
+  body[data-print-mode="absent"] .report-section:not([data-section="absent"]) { display: none !important; }
+
+  /* ----- mode: dept ----- */
+  body[data-print-mode="dept"] .report-section[data-section="dept"] { display: block !important; }
+  body[data-print-mode="dept"] .report-section:not([data-section="dept"]) { display: none !important; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #ccc; padding: 4pt 6pt; font-size: 10pt; }
+  th { background: #f0f0f0; }
+
+  /* badges print in grayscale-friendly way */
+  .badge-open::after { content: " ✓"; }
+  .badge-pending::after { content: " …"; }
+  .badge-closed::after { content: " ✕"; }
 }

@@ -31,5 +31,26 @@
 - **js/api.js** — เพิ่ม `formatEventDateRange()` และ `formatThaiDate()` ฟอร์แมตวันที่เป็น "20 มิถุนายน 2569 เวลา 08:32 ถึง 13:00" (ใช้ปี พ.ศ., ชื่อเดือนไทย, ช่วงเวลาเริ่ม-ปิดรับ) ถ้าวันปิดรับเป็นวันอื่นจะแสดงวันที่ปิดรับต่อท้ายด้วย
 - **js/activities.js**, **js/activityAdmin.js** — ใช้ `formatEventDateRange()` แทนการโชว์ค่าวันที่ดิบจาก sheet ทั้งในหน้ารายการกิจกรรมสาธารณะและตารางจัดการของแอดมิน
 
+## เพิ่มระบบล็อกอิน (รอบที่แล้ว)
+
+ไฟล์ใหม่: `js/auth.js` (session helper กลาง), `js/login.js` (logic หน้า login 5 ช่อง), `js/adminLogin.js` (logic หน้า step-up แอดมิน), `pages/admin-login.html`, `backend/Auth.gs` (`checkUnitCode`, `checkAdminCode`, `requireAdmin`)
+
+- **index.html** — เปลี่ยนเป็นหน้า login แบบกรอกเบอร์หน่วย 5 หลัก (5 ช่อง auto-advance + paste support) ตรวจสอบกับชีต "เบอร์หน่วย" คอลัม B ผ่าน backend
+- ทุกหน้าใน `pages/` — เพิ่ม auth guard ที่หัวไฟล์ (`requireUnitAuth()` หรือ `requireAdminAuth()` สำหรับหน้าแอดมิน), topbar ใหม่แสดงชื่อหน่วยที่ login + ปุ่มออกจากระบบ
+- **pages/admin-login.html** — หน้าขั้นที่สอง ต้อง login ด้วยเบอร์หน่วยก่อนถึงจะเข้าได้ ใส่รหัสแอดมิน `0910655667` ตรวจสอบฝั่ง backend ด้วย (ไม่ใช่แค่ฝั่ง client)
+- **js/activityForm.js** — เลือกแผนกในฟอร์มส่งยอด pre-fill เป็นชื่อหน่วยที่ login ไว้ให้อัตโนมัติ แต่ยังเปลี่ยนแผนกอื่นได้
+- **js/activityAdmin.js**, **backend/Events.gs** — แนบ `adminCode` จาก session ไปกับทุก write action (`createEvent`/`closeEvent`/`reopenEvent`) และฝั่ง backend ตรวจสอบรหัสจริงก่อนทำรายการทุกครั้ง (ป้องกันการยิง API ตรงๆ ข้ามหน้าเว็บ)
+- **css/activity.css** — เขียนใหม่ทั้งหมดเป็น design system (สี navy/amber, font Mitr/Sarabun/Bai Jamjuree), เพิ่มหน้าตาเฉพาะของหน้า login (กล่องโค้ด 5 ช่อง)
+
+## เพิ่มปุ่มย้อนกลับ + พิมพ์รายงานแยกประเภท (รอบล่าสุด)
+
+- **backend/Reports.gs** — `getEventSummary` เพิ่ม `joinList` (รายชื่อผู้เข้าร่วมพร้อมแผนก) คู่กับ `absentList` ที่มีอยู่แล้ว
+- **pages/activity-report.html** + **js/activityReport.js** — เพิ่มปุ่ม "ย้อนกลับ" (ใช้ `history.back()`) ทั้งด้านบนและด้านล่างหน้า, เพิ่มตารางรายชื่อผู้เข้าร่วม (เดิมมีแต่ผู้ไม่เข้าร่วม), แยกปุ่มพิมพ์เป็น 4 ปุ่ม: พิมพ์ผู้เข้าร่วม / พิมพ์ผู้ไม่เข้าร่วม / พิมพ์สถานะหน่วยส่งยอด / พิมพ์รายงานทั้งหมด — แต่ละปุ่มเรียก `printMode(mode)` ซึ่งตั้ง `data-print-mode` บน `<body>` ก่อนเปิด print dialog ทำให้ CSS `@media print` ซ่อนทุกส่วนยกเว้นส่วนที่เลือก พร้อม header พิเศษ (ชื่อกิจกรรม + เวลาพิมพ์) ที่โชว์เฉพาะตอนพิมพ์
+- **pages/activity-form.html** — เพิ่มปุ่ม "ย้อนกลับ" ด้วยเพื่อความสอดคล้องในการนำทาง
+- **css/activity.css** — เพิ่ม `.action-bar`, `.stat-label`/`.stat-value`, `.print-header`, และกฎ `@media print` ใหม่ทั้งหมดที่ควบคุมการแสดงผลตาม print mode
+
+## วิธีติดตั้ง
+
 1. **Frontend**: เอาทั้งโฟลเดอร์ `activity-system/` (ยกเว้น `backend/`) ไปแทนที่ไฟล์เดิมบนเว็บได้เลย โครงสร้างไฟล์เหมือนเดิมทุกอย่าง
-2. **Backend**: เปิด Apps Script project เดิม แล้ว copy เนื้อหาแต่ละไฟล์ใน `backend/*.gs` ไปแทนที่ไฟล์ชื่อเดียวกัน (Code.gs, Events.gs, Attendance.gs, Reports.gs) จากนั้น Deploy ใหม่ (Deploy > Manage deployments > Edit > New version)
+2. **Backend**: เปิด Apps Script project เดิม แล้ว copy เนื้อหาแต่ละไฟล์ใน `backend/*.gs` ไปแทนที่ไฟล์ชื่อเดียวกัน (รวม `Auth.gs` ที่เพิ่มใหม่) จากนั้น Deploy ใหม่ (Deploy > Manage deployments > Edit > New version)
+3. ชีต Google Sheets ต้องมี sheet ชื่อ **"เบอร์หน่วย"** (ตรงทุกตัวอักษร) คอลัม A = ชื่อหน่วย, คอลัม B = เบอร์ 5 หลัก

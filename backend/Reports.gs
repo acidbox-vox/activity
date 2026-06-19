@@ -3,18 +3,16 @@ function getEventSummary(eventId) {
   const rows = sh.getDataRange().getValues();
   let join = 0;
   let absent = 0;
+  const joinList = [];
   const absentList = [];
   rows.forEach(r => {
     if (r[0] !== eventId) return;
     if (r[3] === "เข้าร่วม") {
       join++;
+      joinList.push({ name: r[2], dept: r[1] });
     } else {
       absent++;
-      absentList.push({
-        name: r[2],
-        dept: r[1],
-        reason: r[4]
-      });
+      absentList.push({ name: r[2], dept: r[1], reason: r[4] });
     }
   });
 
@@ -41,6 +39,7 @@ function getEventSummary(eventId) {
     join,
     absent,
     total: join + absent,
+    joinList,
     absentList,
     submittedDepts,
     pendingDepts

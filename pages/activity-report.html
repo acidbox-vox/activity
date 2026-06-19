@@ -25,17 +25,34 @@
 
 <div class="page">
 
+<!-- back button -->
+<div style="margin:var(--space-4) 0 var(--space-2);">
+  <button class="secondary" onclick="history.back()">&#8592; ย้อนกลับ</button>
+</div>
+
 <h2>รายงานกิจกรรม</h2>
 
-<div class="card" id="eventTitle"></div>
+<div class="card" id="eventTitle">กำลังโหลด...</div>
 
 <div class="card" id="summary"></div>
 
-<div class="card" id="deptStatus"></div>
+<!-- print-only header (visible only @media print via CSS) -->
+<div class="print-header" id="printHeader"></div>
 
-<div class="card" id="absentDetail"></div>
+<div class="card report-section" id="joinDetail" data-section="join"></div>
 
-<button class="secondary" onclick="window.print()">&#128424; พิมพ์รายงาน</button>
+<div class="card report-section" id="absentDetail" data-section="absent"></div>
+
+<div class="card report-section" id="deptStatus" data-section="dept"></div>
+
+<!-- action bar -->
+<div class="action-bar">
+  <button class="secondary" onclick="history.back()">&#8592; ย้อนกลับ</button>
+  <button class="secondary" onclick="printMode('join')">&#128424; พิมพ์รายงานผู้เข้าร่วม</button>
+  <button class="secondary" onclick="printMode('absent')">&#128424; พิมพ์รายงานผู้ไม่เข้าร่วม</button>
+  <button class="secondary" onclick="printMode('dept')">&#128424; พิมพ์สถานะหน่วยส่งยอด</button>
+  <button class="secondary" onclick="printMode('all')">&#128424; พิมพ์รายงานทั้งหมด</button>
+</div>
 
 </div>
 
