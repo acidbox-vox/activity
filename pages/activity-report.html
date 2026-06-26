@@ -17,7 +17,7 @@
 <div class="topbar">
   <div class="brand">ระบบส่งยอดกิจกรรม <span class="unit-chip" id="unitChip"></span></div>
   <nav>
-    <a href="activities.html">รายการกิจกรรม</a>
+    <a href="activities.html">หน้าแรก</a>
     <a href="#" onclick="logoutAndRedirect(); return false;">ออกจากระบบ</a>
   </nav>
 </div>
@@ -25,37 +25,57 @@
 
 <div class="page">
 
-<div style="margin:var(--space-4) 0 var(--space-3);">
+<div style="display:flex; gap:var(--space-2); margin:var(--space-4) 0 var(--space-2); flex-wrap:wrap;">
+  <button class="secondary" onclick="location.href='activities.html'">🏠 หน้าแรก</button>
   <button class="secondary" onclick="history.back()">&#8592; ย้อนกลับ</button>
 </div>
 
 <!-- print-only header -->
 <div class="print-header" id="printHeader"></div>
 
-<!-- event title card -->
+<!-- event title -->
 <div class="card" id="eventTitle" style="padding:var(--space-4) var(--space-5);">กำลังโหลด...</div>
 
 <!-- summary stats -->
 <div class="card" id="summary"></div>
 
-<!-- join list (accordion by dept) -->
+<!-- join list -->
 <div class="card report-section" id="joinDetail" data-section="join"></div>
 
-<!-- absent list (accordion by dept) -->
+<!-- absent list -->
 <div class="card report-section" id="absentDetail" data-section="absent"></div>
 
-<!-- dept submission status -->
+<!-- dept status -->
 <div class="card report-section" id="deptStatus" data-section="dept"></div>
 
 <!-- action / print bar -->
 <div class="action-bar">
   <span class="action-label">🖨 พิมพ์</span>
-  <button class="print-btn" onclick="printMode('join')">ผู้เข้าร่วม</button>
-  <button class="print-btn" onclick="printMode('absent')">ผู้ไม่เข้าร่วม</button>
+  <button class="print-btn" onclick="openPrintDialog('join')">ผู้เข้าร่วม</button>
+  <button class="print-btn" onclick="openPrintDialog('absent')">ผู้ไม่เข้าร่วม</button>
   <button class="print-btn" onclick="printMode('dept')">สถานะแผนก</button>
-  <button class="print-btn" onclick="printMode('all')">ทั้งหมด</button>
+  <button class="print-btn" onclick="openPrintDialog('all')">ทั้งหมด</button>
   <div style="flex:1"></div>
-  <button class="secondary" onclick="history.back()">&#8592; ย้อนกลับ</button>
+  <button class="secondary" onclick="location.href='activities.html'">🏠 หน้าแรก</button>
+</div>
+
+<!-- ── Print dialog ── -->
+<div id="printDialogOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:var(--radius-xl); padding:var(--space-6); max-width:440px; width:90%; box-shadow:var(--shadow-lg);">
+    <h3 style="margin:0 0 var(--space-4);" id="dialogTitle">เลือกแผนกที่ต้องการพิมพ์</h3>
+
+    <div style="display:flex; gap:var(--space-2); margin-bottom:var(--space-3); flex-wrap:wrap;">
+      <button class="secondary" style="font-size:0.82rem; padding:6px 12px;" onclick="selectAllDepts(true)">✅ เลือกทั้งหมด</button>
+      <button class="secondary" style="font-size:0.82rem; padding:6px 12px;" onclick="selectAllDepts(false)">☐ ยกเลิกทั้งหมด</button>
+    </div>
+
+    <div id="deptCheckboxList" style="max-height:240px; overflow-y:auto; border:1px solid var(--line-200); border-radius:var(--radius-md); padding:var(--space-3); margin-bottom:var(--space-4); display:flex; flex-direction:column; gap:var(--space-2);"></div>
+
+    <div style="display:flex; gap:var(--space-2); justify-content:flex-end;">
+      <button class="secondary" onclick="closePrintDialog()">ยกเลิก</button>
+      <button onclick="confirmPrint()">🖨 พิมพ์</button>
+    </div>
+  </div>
 </div>
 
 </div>

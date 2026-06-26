@@ -17,7 +17,7 @@
 <div class="topbar">
   <div class="brand">ระบบส่งยอดกิจกรรม <span class="unit-chip" id="unitChip"></span></div>
   <nav>
-    <a href="activities.html">รายการกิจกรรม</a>
+    <a href="activities.html">หน้าแรก</a>
     <a href="#" onclick="logoutAndRedirect(); return false;">ออกจากระบบ</a>
   </nav>
 </div>
@@ -25,7 +25,8 @@
 
 <div class="page">
 
-<div style="margin:var(--space-4) 0 var(--space-2);">
+<div style="display:flex; gap:var(--space-2); margin:var(--space-4) 0 var(--space-2); flex-wrap:wrap;">
+  <button class="secondary" onclick="location.href='activities.html'">🏠 หน้าแรก</button>
   <button class="secondary" onclick="history.back()">&#8592; ย้อนกลับ</button>
 </div>
 
@@ -34,27 +35,32 @@
 <div class="card" id="eventInfo">กำลังโหลดข้อมูลกิจกรรม...</div>
 
 <div class="card">
+  <div class="field">
+    <label>แผนก / หน่วย</label>
+    <select id="deptSelect">
+      <option value="">เลือกแผนก</option>
+    </select>
+  </div>
 
-<div class="field">
-<label>แผนก / หน่วย</label>
-<select id="deptSelect">
-<option>เลือกแผนก</option>
-</select>
-</div>
+  <button class="secondary" onclick="loadDepartment()">📋 โหลดรายชื่อ</button>
 
-<button class="secondary" onclick="loadDepartment()">โหลดรายชื่อ</button>
+  <!-- notice when loading pre-existing data -->
+  <div id="reloadNotice" style="display:none; margin-top:var(--space-3);">
+    <div class="badge badge-pending" style="font-size:0.85rem; padding:6px 14px; border-radius:var(--radius-md);">
+      ⚠️ โหลดข้อมูลที่เคยส่งไปแล้ว — แก้ไขแล้วกด "บันทึก/อัปเดตยอด" ได้เลย
+    </div>
+  </div>
 
-<div id="personTable"></div>
+  <div id="personTable"></div>
 
-<br>
-
-<button id="submitBtn" onclick="submitReport()">ส่งยอด</button>
-
+  <div style="margin-top:var(--space-4); display:flex; gap:var(--space-2); flex-wrap:wrap;">
+    <button id="submitBtn" onclick="submitReport()">✅ ส่งยอด / อัปเดตยอด</button>
+    <button class="secondary" onclick="location.href='activities.html'">ยกเลิก</button>
+  </div>
 </div>
 
 </div>
 
 <script src="../js/activityForm.js"></script>
-
 </body>
 </html>
