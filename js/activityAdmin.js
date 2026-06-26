@@ -54,7 +54,7 @@ async function submitForm() {
   const eventDateEl = document.getElementById("eventDate");
 
   const data = {
-    eventName: eventNameEl.value.trim(),
+    eventName: eventNameEl.value.trim().replace(/\n+/g, " "),
     eventDate: eventDateEl.value,
     closeDate: document.getElementById("closeDate").value,
     detail:    document.getElementById("detail").value,
