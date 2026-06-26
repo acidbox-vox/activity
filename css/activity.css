@@ -395,8 +395,8 @@ table tr:hover td { background: var(--paper-50); }
 /* ---------- signature table column widths ---------- */
 col.col-num  { width: 40px; }
 /* col-name: no fixed width — expands to fit long names */
-col.col-sign { width: 160px; }
-col.col-note { width: 160px; } /* same as sign */
+col.col-sign { width: 220px; } /* signature — wider */
+col.col-note { width: 100px; } /* remark — shorter */
 
 td.col-num  { text-align: center; white-space: nowrap; }
 td.col-name { white-space: nowrap; } /* never break mid-name */
@@ -747,8 +747,8 @@ td.col-name { white-space: nowrap; } /* never break mid-name */
   .col-num  { width: 28pt; text-align: center !important; }
   /* col-name: no fixed width — let it expand for long names */
   td.col-name { white-space: nowrap; }
-  .col-sign { width: 90pt; }
-  .col-note { width: 90pt; } /* same as sign — not wider */
+  .col-sign { width: 110pt; } /* signature — wider */
+  .col-note { width: 60pt; }  /* remark — shorter */
 
   /* hide dept-rows that were excluded from print dialog selection */
   .dept-row[data-print-include="0"] { display: none !important; }
