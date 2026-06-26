@@ -24,9 +24,10 @@
 
 <div class="page">
 
-<h2>➕ สร้างกิจกรรม</h2>
+<!-- ── Create / Edit form ── -->
+<h2 id="formTitle">➕ สร้างกิจกรรม</h2>
 
-<div class="card">
+<div class="card" id="formCard">
   <div class="field">
     <label>ชื่อกิจกรรม</label>
     <input id="eventName" placeholder="ระบุชื่อกิจกรรม">
@@ -43,14 +44,27 @@
   </div>
   <div class="field">
     <label>รายละเอียด</label>
-    <textarea id="detail" rows="4" placeholder="รายละเอียดกิจกรรม (ถ้ามี)"></textarea>
+    <textarea id="detail" rows="3" placeholder="รายละเอียดกิจกรรม (ถ้ามี)"></textarea>
   </div>
-  <button onclick="createNewEvent()">สร้างกิจกรรม</button>
+  <div style="display:flex; gap:var(--space-2);">
+    <button id="submitBtn" onclick="submitForm()">สร้างกิจกรรม</button>
+    <button id="cancelEditBtn" class="secondary" onclick="cancelEdit()" style="display:none;">ยกเลิก</button>
+  </div>
 </div>
 
-<h2>📋 จัดการกิจกรรมที่มีอยู่</h2>
+<!-- ── Open events ── -->
+<h2>📅 กิจกรรมที่เปิดอยู่</h2>
+<div id="openEventList"><p class="muted">กำลังโหลด...</p></div>
 
-<div id="adminEventList"><p class="muted">กำลังโหลด...</p></div>
+<!-- ── Closed events toggle ── -->
+<div style="margin-top:var(--space-5);">
+  <button class="secondary" id="closedToggleBtn" onclick="toggleClosedPanel()" style="width:100%; text-align:left; justify-content:flex-start;">
+    ▼ กิจกรรมที่ผ่านไปแล้ว (<span id="closedCount">…</span>)
+  </button>
+  <div id="closedPanel" style="display:none; margin-top:var(--space-3);">
+    <div id="closedEventList"></div>
+  </div>
+</div>
 
 </div>
 

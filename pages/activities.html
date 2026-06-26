@@ -25,9 +25,17 @@
 
 <div class="page">
 
-<h2>📅 รายการกิจกรรม</h2>
+<h2>📅 กิจกรรมที่เปิดรับอยู่</h2>
+<div id="openList"><p class="muted">กำลังโหลด...</p></div>
 
-<div id="eventList"><p class="muted">กำลังโหลด...</p></div>
+<div style="margin-top:var(--space-5);">
+  <button class="secondary" id="closedToggleBtn" onclick="toggleClosed()" style="width:100%; text-align:left;">
+    ▼ กิจกรรมที่ผ่านไปแล้ว (<span id="closedCount">…</span>)
+  </button>
+  <div id="closedPanel" style="display:none; margin-top:var(--space-3);">
+    <div id="closedList"></div>
+  </div>
+</div>
 
 </div>
 

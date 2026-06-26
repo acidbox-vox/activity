@@ -1,16 +1,10 @@
 window.onload = loadSummary;
 
-// Track which dept accordion rows are open
-const openDepts = new Set();
-
 function printMode(mode) {
   document.body.setAttribute("data-print-mode", mode);
-  // Open all dept accordions before printing so content is visible
   document.querySelectorAll(".dept-row").forEach(r => r.classList.add("open"));
   window.print();
-  setTimeout(() => {
-    document.body.removeAttribute("data-print-mode");
-  }, 100);
+  setTimeout(() => document.body.removeAttribute("data-print-mode"), 100);
 }
 
 async function loadSummary() {
@@ -52,7 +46,6 @@ async function loadSummary() {
     return;
   }
 
-  // --- Stat grid ---
   document.getElementById("summary").innerHTML = `
     <div class="stat-grid">
       <div class="stat-card success">
@@ -89,6 +82,33 @@ function toggleDept(rowEl) {
   rowEl.classList.toggle("open");
 }
 
+/* ---- table with colgroup for proper column widths ---- */
+function deptTable(members, isAbsent) {
+  const rows = members.map((p, i) => `<tr>
+    <td class="col-num muted">${i + 1}</td>
+    <td class="col-name">${escapeHtml(p.name)}</td>
+    <td class="col-sign"></td>
+    <td class="col-note">${isAbsent ? escapeHtml(p.reason || "") : ""}</td>
+  </tr>`).join("");
+
+  return `
+    <table>
+      <colgroup>
+        <col class="col-num">
+        <col class="col-name">
+        <col class="col-sign">
+        <col class="col-note">
+      </colgroup>
+      <tr>
+        <th class="col-num">#</th>
+        <th class="col-name">ชื่อ</th>
+        <th class="col-sign">ลงชื่อ</th>
+        <th class="col-note">หมายเหตุ</th>
+      </tr>
+      ${rows}
+    </table>`;
+}
+
 /* ---- join list — accordion by dept ---- */
 function renderJoinList(joinList) {
   const box = document.getElementById("joinDetail");
@@ -97,8 +117,9 @@ function renderJoinList(joinList) {
     return;
   }
 
-  const byDept = groupByDept(joinList);
-  const depts  = Object.keys(byDept).sort();
+  const byDept    = groupByDept(joinList);
+  const depts     = Object.keys(byDept).sort();
+  const eventName = document.body.dataset.eventName || "";
 
   let html = `
     <div class="report-section-header">
@@ -113,9 +134,7 @@ function renderJoinList(joinList) {
     html += `
       <div class="dept-row dept-submitted" id="join-dept-${di}">
         <div class="dept-row-header" onclick="toggleDept(this.parentElement)">
-          <div class="dept-row-title">
-            <span>${escapeHtml(dept)}</span>
-          </div>
+          <div class="dept-row-title"><span>${escapeHtml(dept)}</span></div>
           <div class="dept-row-meta">
             <span>${members.length} คน</span>
             <span class="badge badge-open">เข้าร่วม</span>
@@ -123,18 +142,9 @@ function renderJoinList(joinList) {
           </div>
         </div>
         <div class="dept-row-body">
-          <table>
-            <tr><th style="width:44px">#</th><th>ชื่อ</th><th style="width:100px">ลงชื่อ</th><th>หมายเหตุ</th></tr>
-            ${members.map((p, i) => `<tr>
-              <td class="muted">${i + 1}</td>
-              <td>${escapeHtml(p.name)}</td>
-              <td></td>
-              <td></td>
-            </tr>`).join("")}
-          </table>
-          <div class="dept-print-summary" style="margin-top:var(--space-2);font-size:0.82rem;color:var(--ink-400);">
-            สรุป: เข้าร่วม ${members.length} คน
-          </div>
+          <div class="dept-print-page-header">${escapeHtml(eventName)} — ผู้เข้าร่วม — แผนก ${escapeHtml(dept)}</div>
+          ${deptTable(members, false)}
+          <div class="dept-print-summary">สรุป: เข้าร่วม ${members.length} คน</div>
         </div>
       </div>
     `;
@@ -152,8 +162,9 @@ function renderAbsentList(absentList) {
     return;
   }
 
-  const byDept = groupByDept(absentList);
-  const depts  = Object.keys(byDept).sort();
+  const byDept    = groupByDept(absentList);
+  const depts     = Object.keys(byDept).sort();
+  const eventName = document.body.dataset.eventName || "";
 
   let html = `
     <div class="report-section-header">
@@ -168,9 +179,7 @@ function renderAbsentList(absentList) {
     html += `
       <div class="dept-row dept-pending" id="absent-dept-${di}">
         <div class="dept-row-header" onclick="toggleDept(this.parentElement)">
-          <div class="dept-row-title">
-            <span>${escapeHtml(dept)}</span>
-          </div>
+          <div class="dept-row-title"><span>${escapeHtml(dept)}</span></div>
           <div class="dept-row-meta">
             <span>${members.length} คน</span>
             <span class="badge badge-closed">ไม่เข้าร่วม</span>
@@ -178,18 +187,9 @@ function renderAbsentList(absentList) {
           </div>
         </div>
         <div class="dept-row-body">
-          <table>
-            <tr><th style="width:44px">#</th><th>ชื่อ</th><th style="width:100px">ลงชื่อ</th><th>หมายเหตุ</th></tr>
-            ${members.map((p, i) => `<tr>
-              <td class="muted">${i + 1}</td>
-              <td>${escapeHtml(p.name)}</td>
-              <td></td>
-              <td>${escapeHtml(p.reason || "")}</td>
-            </tr>`).join("")}
-          </table>
-          <div style="margin-top:var(--space-2);font-size:0.82rem;color:var(--ink-400);">
-            สรุป: ไม่เข้าร่วม ${members.length} คน
-          </div>
+          <div class="dept-print-page-header">${escapeHtml(eventName)} — ผู้ไม่เข้าร่วม — แผนก ${escapeHtml(dept)}</div>
+          ${deptTable(members, true)}
+          <div class="dept-print-summary">สรุป: ไม่เข้าร่วม ${members.length} คน</div>
         </div>
       </div>
     `;
@@ -213,12 +213,8 @@ function renderDeptStatus(submittedDepts, pendingDepts) {
     <div class="dept-accordion">
   `;
 
-  submittedDepts.forEach((d, i) => {
-    html += deptStatusRow(d, true, i);
-  });
-  pendingDepts.forEach((d, i) => {
-    html += deptStatusRow(d, false, submittedDepts.length + i);
-  });
+  submittedDepts.forEach((d, i) => { html += deptStatusRow(d, true,  i); });
+  pendingDepts.forEach((d, i)   => { html += deptStatusRow(d, false, submittedDepts.length + i); });
 
   html += `</div>`;
   if (!total) html += "<p class='muted'>ไม่มีข้อมูลแผนก</p>";
@@ -226,8 +222,8 @@ function renderDeptStatus(submittedDepts, pendingDepts) {
 }
 
 function deptStatusRow(dept, submitted, idx) {
-  const cls    = submitted ? "dept-submitted" : "dept-pending";
-  const badge  = submitted
+  const cls   = submitted ? "dept-submitted" : "dept-pending";
+  const badge = submitted
     ? '<span class="badge badge-open">ส่งแล้ว</span>'
     : '<span class="badge badge-pending">ยังไม่ส่ง</span>';
   return `
