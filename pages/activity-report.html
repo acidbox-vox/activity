@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>รายงาน</title>
+<title>รายงานกิจกรรม</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600;700&family=Sarabun:wght@400;500;600&family=Bai+Jamjuree:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/activity.css">
@@ -25,38 +25,41 @@
 
 <div class="page">
 
-<!-- back button -->
-<div style="margin:var(--space-4) 0 var(--space-2);">
+<div style="margin:var(--space-4) 0 var(--space-3);">
   <button class="secondary" onclick="history.back()">&#8592; ย้อนกลับ</button>
 </div>
 
-<h2>รายงานกิจกรรม</h2>
-
-<div class="card" id="eventTitle">กำลังโหลด...</div>
-
-<div class="card" id="summary"></div>
-
-<!-- print-only header (visible only @media print via CSS) -->
+<!-- print-only header -->
 <div class="print-header" id="printHeader"></div>
 
+<!-- event title card -->
+<div class="card" id="eventTitle" style="padding:var(--space-4) var(--space-5);">กำลังโหลด...</div>
+
+<!-- summary stats -->
+<div class="card" id="summary"></div>
+
+<!-- join list (accordion by dept) -->
 <div class="card report-section" id="joinDetail" data-section="join"></div>
 
+<!-- absent list (accordion by dept) -->
 <div class="card report-section" id="absentDetail" data-section="absent"></div>
 
+<!-- dept submission status -->
 <div class="card report-section" id="deptStatus" data-section="dept"></div>
 
-<!-- action bar -->
+<!-- action / print bar -->
 <div class="action-bar">
+  <span class="action-label">🖨 พิมพ์</span>
+  <button class="print-btn" onclick="printMode('join')">ผู้เข้าร่วม</button>
+  <button class="print-btn" onclick="printMode('absent')">ผู้ไม่เข้าร่วม</button>
+  <button class="print-btn" onclick="printMode('dept')">สถานะแผนก</button>
+  <button class="print-btn" onclick="printMode('all')">ทั้งหมด</button>
+  <div style="flex:1"></div>
   <button class="secondary" onclick="history.back()">&#8592; ย้อนกลับ</button>
-  <button class="secondary" onclick="printMode('join')">&#128424; พิมพ์รายงานผู้เข้าร่วม</button>
-  <button class="secondary" onclick="printMode('absent')">&#128424; พิมพ์รายงานผู้ไม่เข้าร่วม</button>
-  <button class="secondary" onclick="printMode('dept')">&#128424; พิมพ์สถานะหน่วยส่งยอด</button>
-  <button class="secondary" onclick="printMode('all')">&#128424; พิมพ์รายงานทั้งหมด</button>
 </div>
 
 </div>
 
 <script src="../js/activityReport.js"></script>
-
 </body>
 </html>

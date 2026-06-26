@@ -1,7 +1,6 @@
 window.onload = loadAdminEvents;
 
 async function createNewEvent() {
-
   const eventNameEl = document.getElementById("eventName");
   const eventDateEl = document.getElementById("eventDate");
 
@@ -9,21 +8,14 @@ async function createNewEvent() {
     eventName: eventNameEl.value.trim(),
     eventDate: eventDateEl.value,
     closeDate: document.getElementById("closeDate").value,
-    detail: document.getElementById("detail").value,
+    detail:    document.getElementById("detail").value,
     adminCode: getAuth().adminCode
   };
 
-  if (!data.eventName) {
-    alert("กรุณาระบุชื่อกิจกรรม");
-    return;
-  }
-  if (!data.eventDate) {
-    alert("กรุณาระบุวันเวลาเริ่มกิจกรรม");
-    return;
-  }
+  if (!data.eventName) { alert("กรุณาระบุชื่อกิจกรรม"); return; }
+  if (!data.eventDate) { alert("กรุณาระบุวันเวลาเริ่มกิจกรรม"); return; }
 
   const result = await api("createEvent", data);
-
   if (result.success) {
     alert("สร้างกิจกรรมสำเร็จ");
     eventNameEl.value = "";
@@ -34,16 +26,13 @@ async function createNewEvent() {
   } else {
     alert("สร้างกิจกรรมไม่สำเร็จ: " + (result.message || result.error || ""));
   }
-
 }
 
 async function loadAdminEvents() {
-
   const box = document.getElementById("adminEventList");
-  if (!box) return; // page doesn't have the management table
+  if (!box) return;
 
-  box.innerHTML = "กำลังโหลด...";
-
+  box.innerHTML = "<p class='muted'>กำลังโหลด...</p>";
   const result = await api("getEvents");
 
   if (!result.success) {
@@ -52,45 +41,37 @@ async function loadAdminEvents() {
   }
 
   if (!result.data.length) {
-    box.innerHTML = "<p>ยังไม่มีกิจกรรม</p>";
+    box.innerHTML = "<p class='muted'>ยังไม่มีกิจกรรม</p>";
     return;
   }
 
-  let html = `
-    <table border="1">
-      <tr>
-        <th>ชื่อกิจกรรม</th>
-        <th>วันที่</th>
-        <th>สถานะ</th>
-        <th>การจัดการ</th>
-      </tr>
-  `;
-
+  let html = "";
   result.data.forEach(ev => {
     const isClosed = ev.status === "CLOSED";
     const badge = isClosed
       ? '<span class="badge badge-closed">ปิดรับแล้ว</span>'
       : '<span class="badge badge-open">เปิดรับ</span>';
-    const toggleButton = isClosed
-      ? `<button onclick="toggleEvent('${ev.id}', 'reopen')">เปิดรับอีกครั้ง</button>`
-      : `<button onclick="toggleEvent('${ev.id}', 'close')">ปิดรับรายงาน</button>`;
+    const toggleBtn = isClosed
+      ? `<button class="secondary" onclick="toggleEvent('${ev.id}', 'reopen')">เปิดรับอีกครั้ง</button>`
+      : `<button class="danger"    onclick="toggleEvent('${ev.id}', 'close')">ปิดรับรายงาน</button>`;
 
     html += `
-      <tr>
-        <td>${escapeHtml(ev.name)}</td>
-        <td>${formatEventDateRange(ev.eventDate, ev.closeDate)}</td>
-        <td>${badge}</td>
-        <td>
-          ${toggleButton}
+      <div class="event-card${isClosed ? " is-closed" : ""}">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-2); margin-bottom:var(--space-3);">
+          <div>
+            <h3 style="margin:0 0 4px;">${escapeHtml(ev.name)} ${badge}</h3>
+            <div class="muted" style="font-size:0.88rem;">${formatEventDateRange(ev.eventDate, ev.closeDate)}</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+          ${toggleBtn}
           <button onclick="location.href='activity-report.html?id=${encodeURIComponent(ev.id)}'">ดูรายงาน</button>
-        </td>
-      </tr>
+        </div>
+      </div>
     `;
   });
 
-  html += "</table>";
   box.innerHTML = html;
-
 }
 
 async function toggleEvent(eventId, action) {

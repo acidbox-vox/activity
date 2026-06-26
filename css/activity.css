@@ -1,52 +1,55 @@
 /* ============================================================
-   Design tokens
-   Subject: an internal unit/extension-code attendance system.
-   Login identifies people by their phone extension, so the
-   signature motif is the switchboard/extension-window look on
-   the login screen; everything else stays quiet and procedural.
+   Design tokens — Minimal White + Gradient Theme
    ============================================================ */
 :root {
-  --navy-900: #102A43;
-  --navy-700: #1E4F77;
-  --navy-050: #EAF1F8;
-  --amber-600: #C17F0A;
-  --amber-050: #FBF1DE;
-  --success-600: #1B7A4D;
-  --success-050: #E6F3EC;
-  --danger-600: #AD3128;
-  --danger-050: #FBEAE8;
-  --ink-900: #16212E;
-  --ink-500: #5B6B7C;
-  --paper-0: #FFFFFF;
-  --paper-50: #F6F8FA;
-  --line-200: #DDE3EA;
+  /* Brand gradient */
+  --grad-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --grad-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  --grad-danger:  linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+  --grad-info:    linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --grad-card:    linear-gradient(145deg, #ffffff 0%, #f8f9ff 100%);
+  --grad-topbar:  linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+
+  /* Palette */
+  --navy-900:   #1a1a2e;
+  --navy-700:   #16213e;
+  --navy-400:   #0f3460;
+  --indigo-500: #667eea;
+  --purple-500: #764ba2;
+  --teal-500:   #11998e;
+  --success-600:#0d7c5a;
+  --success-050:#e8fdf5;
+  --danger-600: #e53e3e;
+  --danger-050: #fff5f5;
+  --amber-600:  #d69e2e;
+  --amber-050:  #fffff0;
+  --ink-900:    #1a202c;
+  --ink-600:    #4a5568;
+  --ink-400:    #718096;
+  --paper-0:    #ffffff;
+  --paper-50:   #f7f8fc;
+  --line-200:   #e2e8f0;
+  --line-100:   #edf2f7;
 
   --font-display: "Mitr", "Sarabun", system-ui, sans-serif;
-  --font-body: "Sarabun", system-ui, sans-serif;
-  --font-mono: "Bai Jamjuree", "Sarabun", monospace;
+  --font-body:    "Sarabun", system-ui, sans-serif;
+  --font-mono:    "Bai Jamjuree", "Sarabun", monospace;
 
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
 
-  --shadow-card: 0 1px 2px rgba(16, 42, 67, 0.06), 0 4px 16px rgba(16, 42, 67, 0.06);
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-card: 0 4px 6px rgba(0,0,0,.04), 0 10px 20px rgba(0,0,0,.06);
+  --shadow-lg:   0 10px 25px rgba(0,0,0,.08), 0 20px 48px rgba(0,0,0,.06);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: var(--font-body);
@@ -54,11 +57,11 @@ body {
   background: var(--paper-50);
   margin: 0;
   padding: 0 var(--space-4) var(--space-7);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .page {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
@@ -69,25 +72,21 @@ h1, h2, h3, h4 {
   line-height: 1.3;
   margin: 0 0 var(--space-3);
 }
-
 h1 { font-size: 1.6rem; }
 h2 { font-size: 1.35rem; margin-top: var(--space-6); }
 h3 { font-size: 1.1rem; }
-h4 { font-size: 0.95rem; color: var(--ink-500); text-transform: uppercase; letter-spacing: 0.04em; }
+h4 { font-size: 0.88rem; color: var(--ink-400); text-transform: uppercase; letter-spacing: 0.05em; }
 
 p { margin: 0 0 var(--space-3); }
 
-a {
-  color: var(--navy-700);
-  text-decoration: none;
-}
+a { color: var(--indigo-500); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 /* ---------- top bar ---------- */
 .topbar {
-  background: var(--navy-900);
+  background: var(--grad-topbar);
   margin: 0 calc(-1 * var(--space-4)) var(--space-6);
-  padding: var(--space-4) var(--space-4);
+  padding: var(--space-3) var(--space-5);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -97,8 +96,8 @@ a:hover { text-decoration: underline; }
 
 .topbar .brand {
   font-family: var(--font-display);
-  color: var(--paper-0);
-  font-size: 1.05rem;
+  color: #fff;
+  font-size: 1rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -107,11 +106,12 @@ a:hover { text-decoration: underline; }
 
 .topbar .brand .unit-chip {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  background: rgba(255,255,255,0.12);
-  color: var(--amber-050);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  background: rgba(255,255,255,0.15);
+  color: #e2e8f0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 .topbar nav {
@@ -121,91 +121,168 @@ a:hover { text-decoration: underline; }
 }
 
 .topbar nav a {
-  color: var(--navy-050);
-  font-size: 0.92rem;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.9rem;
+  transition: color 0.15s;
 }
-.topbar nav a:hover { color: var(--paper-0); }
+.topbar nav a:hover { color: #fff; text-decoration: none; }
 
 /* ---------- cards ---------- */
 .card {
-  background: var(--paper-0);
+  background: var(--grad-card);
   border: 1px solid var(--line-200);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: var(--space-5);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
 }
 
 .event-card {
   background: var(--paper-0);
   border: 1px solid var(--line-200);
-  border-left: 4px solid var(--navy-700);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-4) var(--space-5);
-  margin: var(--space-4) 0;
-  box-shadow: var(--shadow-card);
+  margin: var(--space-3) 0;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
 }
-.event-card.is-closed { border-left-color: var(--ink-500); }
+.event-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--grad-primary);
+  border-radius: 0 0 0 0;
+}
+.event-card.is-closed::before {
+  background: var(--line-200);
+}
+.event-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
+}
+
+/* ---------- stat cards ---------- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.stat-card {
+  background: var(--paper-0);
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.stat-card.success { border-top: 3px solid var(--teal-500); }
+.stat-card.danger  { border-top: 3px solid var(--danger-600); }
+.stat-card.neutral { border-top: 3px solid var(--indigo-500); }
+
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--ink-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-1);
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.stat-card.success .stat-value { color: var(--success-600); }
+.stat-card.danger  .stat-value { color: var(--danger-600); }
+.stat-card.neutral .stat-value { color: var(--indigo-500); }
 
 /* ---------- buttons ---------- */
 button, .btn {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
-  padding: 10px 18px;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  background: var(--navy-900);
-  color: var(--paper-0);
-  transition: background 0.15s ease, transform 0.05s ease;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--grad-primary);
+  color: #fff;
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: 0 2px 8px rgba(102,126,234,0.3);
 }
-button:hover { background: var(--navy-700); }
-button:active { transform: translateY(1px); }
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
-}
+button:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(102,126,234,0.4); }
+button:active { transform: translateY(0); }
+button:disabled { cursor: not-allowed; opacity: 0.4; box-shadow: none; }
 
 button.secondary {
   background: var(--paper-0);
-  color: var(--navy-900);
+  color: var(--ink-600);
   border: 1px solid var(--line-200);
+  box-shadow: var(--shadow-sm);
 }
-button.secondary:hover { background: var(--navy-050); }
+button.secondary:hover { background: var(--paper-50); box-shadow: var(--shadow-card); color: var(--ink-900); }
+
+button.success {
+  background: var(--grad-success);
+  box-shadow: 0 2px 8px rgba(17,153,142,0.3);
+}
+button.success:hover { box-shadow: 0 4px 14px rgba(17,153,142,0.4); }
 
 button.danger {
-  background: var(--paper-0);
+  background: transparent;
   color: var(--danger-600);
   border: 1px solid var(--danger-600);
+  box-shadow: none;
 }
 button.danger:hover { background: var(--danger-050); }
 
+button.print-btn {
+  background: var(--paper-0);
+  color: var(--ink-600);
+  border: 1px solid var(--line-200);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.85rem;
+  padding: 8px 14px;
+}
+button.print-btn:hover { background: var(--paper-50); }
+
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 3px solid var(--amber-600);
+  outline: 3px solid var(--indigo-500);
   outline-offset: 2px;
 }
 
 /* ---------- forms ---------- */
 label {
   display: block;
-  font-size: 0.88rem;
-  color: var(--ink-500);
+  font-size: 0.87rem;
+  color: var(--ink-600);
+  font-weight: 600;
   margin-bottom: var(--space-1);
 }
 
 input[type="text"], input[type="password"], input[type="datetime-local"], select, textarea {
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 0.97rem;
   color: var(--ink-900);
   background: var(--paper-0);
-  border: 1px solid var(--line-200);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  border: 1.5px solid var(--line-200);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
   width: 100%;
-  max-width: 420px;
+  max-width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-textarea { max-width: 100%; }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--indigo-500);
+  box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+}
+textarea { max-width: 100%; resize: vertical; }
 
 .field {
   margin-bottom: var(--space-4);
@@ -216,44 +293,132 @@ table {
   border-collapse: collapse;
   width: 100%;
   margin-top: var(--space-3);
-  font-size: 0.95rem;
+  font-size: 0.93rem;
 }
 table th {
   text-align: left;
-  font-size: 0.8rem;
-  color: var(--ink-500);
+  font-size: 0.78rem;
+  color: var(--ink-400);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  border-bottom: 1px solid var(--line-200);
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--line-200);
   padding: var(--space-2) var(--space-3);
+  background: var(--paper-50);
 }
 table td {
   padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--line-200);
+  border-bottom: 1px solid var(--line-100);
+  vertical-align: middle;
 }
 table tr:last-child td { border-bottom: none; }
+table tr:hover td { background: var(--paper-50); }
 
 /* ---------- badges ---------- */
 .badge {
   display: inline-block;
   padding: 3px 10px;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
 }
-.badge-open { background: var(--success-050); color: var(--success-600); }
-.badge-closed { background: var(--danger-050); color: var(--danger-600); }
-.badge-pending { background: var(--amber-050); color: var(--amber-600); }
+.badge-open    { background: var(--success-050); color: var(--success-600); }
+.badge-closed  { background: var(--danger-050);  color: var(--danger-600);  }
+.badge-pending { background: var(--amber-050);   color: var(--amber-600);   }
 
 .error-text { color: var(--danger-600); }
-.muted { color: var(--ink-500); }
+.muted { color: var(--ink-400); }
 
-/* ============================================================
-   Login screen — the signature element.
-   Five extension-window boxes, monospace digits, an amber glow
-   on the active box (a switchboard signal lamp), and a dotted
-   "line" tying the boxes together like a patch cable.
-   ============================================================ */
+/* ---------- accordion dept list ---------- */
+.dept-accordion {
+  margin-top: var(--space-3);
+}
+
+.dept-row {
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+  background: var(--paper-0);
+  box-shadow: var(--shadow-sm);
+}
+
+.dept-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.dept-row-header:hover { background: var(--paper-50); }
+
+.dept-row-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.dept-row-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.85rem;
+  color: var(--ink-400);
+}
+
+.dept-chevron {
+  font-size: 0.75rem;
+  color: var(--ink-400);
+  transition: transform 0.2s;
+}
+.dept-row.open .dept-chevron {
+  transform: rotate(180deg);
+}
+
+.dept-row-body {
+  display: none;
+  padding: 0 var(--space-4) var(--space-3);
+  border-top: 1px solid var(--line-100);
+  background: var(--paper-50);
+}
+.dept-row.open .dept-row-body {
+  display: block;
+}
+
+/* submitted / pending indicators */
+.dept-submitted { border-left: 3px solid var(--teal-500); }
+.dept-pending   { border-left: 3px solid var(--amber-600); }
+
+/* ---------- section dividers in report ---------- */
+.report-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--line-200);
+}
+
+.report-section-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.count-chip {
+  background: var(--paper-50);
+  border: 1px solid var(--line-200);
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-size: 0.82rem;
+  color: var(--ink-600);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* ---------- login screen ---------- */
 .login-shell {
   min-height: 100vh;
   display: flex;
@@ -261,13 +426,14 @@ table tr:last-child td { border-bottom: none; }
   justify-content: center;
   margin: 0 calc(-1 * var(--space-4));
   padding: var(--space-4);
+  background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 50%, #f0f4ff 100%);
 }
 
 .login-card {
   background: var(--paper-0);
   border: 1px solid var(--line-200);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   padding: var(--space-7) var(--space-6);
   max-width: 420px;
   width: 100%;
@@ -276,19 +442,16 @@ table tr:last-child td { border-bottom: none; }
 
 .login-eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  color: var(--ink-500);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-400);
   text-transform: uppercase;
   margin-bottom: var(--space-2);
 }
 
-.login-card h1 {
-  margin-bottom: var(--space-2);
-}
-
+.login-card h1 { margin-bottom: var(--space-2); }
 .login-card .login-sub {
-  color: var(--ink-500);
+  color: var(--ink-400);
   font-size: 0.92rem;
   margin-bottom: var(--space-6);
 }
@@ -304,8 +467,7 @@ table tr:last-child td { border-bottom: none; }
 .code-row::before {
   content: "";
   position: absolute;
-  left: 8%;
-  right: 8%;
+  left: 8%; right: 8%;
   top: 50%;
   height: 1px;
   background: repeating-linear-gradient(to right, var(--line-200) 0 4px, transparent 4px 8px);
@@ -326,13 +488,14 @@ table tr:last-child td { border-bottom: none; }
   border: 2px solid var(--line-200);
   border-radius: var(--radius-md);
   padding: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .code-box:focus {
   outline: none;
-  border-color: var(--amber-600);
-  background: var(--amber-050);
-  box-shadow: 0 0 0 4px rgba(193, 127, 10, 0.18);
+  border-color: var(--indigo-500);
+  background: #f0f4ff;
+  box-shadow: 0 0 0 4px rgba(102,126,234,0.18);
 }
 
 .login-card button {
@@ -344,16 +507,13 @@ table tr:last-child td { border-bottom: none; }
 .login-footnote {
   margin-top: var(--space-5);
   font-size: 0.82rem;
-  color: var(--ink-500);
+  color: var(--ink-400);
 }
 
-/* ---------- top-of-page loading bar ---------- */
+/* ---------- loading bar ---------- */
 #__loadingBar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 3px;
   background: transparent;
   z-index: 9999;
   opacity: 0;
@@ -363,36 +523,36 @@ table tr:last-child td { border-bottom: none; }
 #__loadingBarFill {
   height: 100%;
   width: 0%;
-  background: var(--amber-600);
+  background: var(--grad-primary);
 }
 
-/* ---------- action bar (bottom of report page) ---------- */
+/* ---------- action bar ---------- */
 .action-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
-  margin: var(--space-5) 0 var(--space-7);
+  gap: var(--space-2);
+  margin: var(--space-4) 0 var(--space-7);
+  padding: var(--space-4);
+  background: var(--paper-0);
+  border: 1px solid var(--line-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  align-items: center;
 }
 
-/* ---------- report stat display ---------- */
-.stat-label {
-  font-size: 0.8rem;
-  color: var(--ink-500);
+.action-bar .action-label {
+  font-size: 0.82rem;
+  color: var(--ink-400);
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  margin-bottom: var(--space-1);
-}
-.stat-value {
-  font-family: var(--font-mono);
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--ink-900);
-  line-height: 1;
+  margin-right: var(--space-2);
+  white-space: nowrap;
 }
 
-/* ---------- print-only header (event name + print date) ---------- */
+/* ---------- print-only header ---------- */
 .print-header {
-  display: none; /* hidden on screen; shown only inside @media print */
+  display: none;
 }
 
 /* ---------- responsive ---------- */
@@ -401,6 +561,8 @@ table tr:last-child td { border-bottom: none; }
   .topbar { flex-direction: column; align-items: flex-start; }
   .action-bar { flex-direction: column; }
   .action-bar button { width: 100%; }
+  .stat-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+  .stat-value { font-size: 1.5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -408,73 +570,75 @@ table tr:last-child td { border-bottom: none; }
 }
 
 /* =============================================================
-   Print styles
-   
-   The print buttons call printMode('join'|'absent'|'dept'|'all')
-   which sets data-print-mode on <body> before calling
-   window.print(), then removes it afterwards.
-   
-   Each .report-section has a data-section attribute matching
-   one of those mode names.  When a specific mode is active,
-   only the matching section is visible; the "all" mode shows
-   everything.
+   Print styles — แยกแผนกแยกแผ่น
    ============================================================= */
 @media print {
-
-  /* hide every bit of UI chrome */
-  .topbar, .action-bar, button, nav,
-  #__loadingBar { display: none !important; }
+  .topbar, .action-bar, button, nav, #__loadingBar { display: none !important; }
 
   body {
     background: #fff;
     padding: 0;
-    font-size: 11pt;
+    font-size: 10.5pt;
+    color: #000;
   }
 
   .card, .event-card {
     box-shadow: none;
     border: 1px solid #ccc;
-    page-break-inside: avoid;
+    border-radius: 6px;
   }
 
-  /* summary stats are always printed */
   #eventTitle, #summary { display: block !important; }
 
-  /* print-only header */
   .print-header {
     display: block;
     font-family: var(--font-display);
-    font-size: 10pt;
-    color: #555;
+    font-size: 9pt;
+    color: #666;
     margin-bottom: 8pt;
     padding-bottom: 4pt;
     border-bottom: 1px solid #ccc;
   }
 
-  /* ----- mode: all (default, no attribute) ----- */
-  body:not([data-print-mode]) .report-section,
-  body[data-print-mode="all"] .report-section {
-    display: block !important;
+  /* Each dept block breaks to a new page */
+  .print-dept-block {
+    page-break-before: always;
+    padding-top: 12pt;
+  }
+  .print-dept-block:first-of-type {
+    page-break-before: avoid;
   }
 
-  /* ----- mode: join ----- */
-  body[data-print-mode="join"] .report-section[data-section="join"] { display: block !important; }
-  body[data-print-mode="join"] .report-section:not([data-section="join"]) { display: none !important; }
+  /* mode: all (default) */
+  body:not([data-print-mode]) .report-section,
+  body[data-print-mode="all"] .report-section { display: block !important; }
 
-  /* ----- mode: absent ----- */
+  body[data-print-mode="join"]   .report-section[data-section="join"]   { display: block !important; }
+  body[data-print-mode="join"]   .report-section:not([data-section="join"])   { display: none !important; }
+
   body[data-print-mode="absent"] .report-section[data-section="absent"] { display: block !important; }
   body[data-print-mode="absent"] .report-section:not([data-section="absent"]) { display: none !important; }
 
-  /* ----- mode: dept ----- */
-  body[data-print-mode="dept"] .report-section[data-section="dept"] { display: block !important; }
-  body[data-print-mode="dept"] .report-section:not([data-section="dept"]) { display: none !important; }
+  body[data-print-mode="dept"]   .report-section[data-section="dept"]   { display: block !important; }
+  body[data-print-mode="dept"]   .report-section:not([data-section="dept"])   { display: none !important; }
 
   table { width: 100%; border-collapse: collapse; }
-  th, td { border: 1px solid #ccc; padding: 4pt 6pt; font-size: 10pt; }
-  th { background: #f0f0f0; }
+  th, td { border: 1px solid #ccc; padding: 4pt 6pt; font-size: 9.5pt; }
+  th { background: #f5f5f5; font-weight: 700; }
 
-  /* badges print in grayscale-friendly way */
-  .badge-open::after { content: " ✓"; }
-  .badge-pending::after { content: " …"; }
+  .badge-open::after   { content: " ✓"; }
+  .badge-pending::after{ content: " …"; }
   .badge-closed::after { content: " ✕"; }
+
+  .dept-row-body { display: block !important; }
+  .dept-accordion, .dept-row, .dept-row-header, .dept-row-body {
+    box-shadow: none !important;
+  }
+
+  /* summary totals per dept */
+  .dept-print-summary {
+    font-size: 9pt;
+    color: #555;
+    margin-bottom: 4pt;
+  }
 }

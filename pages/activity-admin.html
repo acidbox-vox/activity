@@ -24,41 +24,36 @@
 
 <div class="page">
 
-<h2>สร้างกิจกรรม</h2>
+<h2>➕ สร้างกิจกรรม</h2>
 
 <div class="card">
-
-<div class="field">
-<label>ชื่อกิจกรรม</label>
-<input id="eventName" style="width:100%; max-width:none;">
+  <div class="field">
+    <label>ชื่อกิจกรรม</label>
+    <input id="eventName" placeholder="ระบุชื่อกิจกรรม">
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4);">
+    <div class="field">
+      <label>วันเวลาเริ่ม</label>
+      <input type="datetime-local" id="eventDate">
+    </div>
+    <div class="field">
+      <label>วันเวลาปิดรับรายงาน</label>
+      <input type="datetime-local" id="closeDate">
+    </div>
+  </div>
+  <div class="field">
+    <label>รายละเอียด</label>
+    <textarea id="detail" rows="4" placeholder="รายละเอียดกิจกรรม (ถ้ามี)"></textarea>
+  </div>
+  <button onclick="createNewEvent()">สร้างกิจกรรม</button>
 </div>
 
-<div class="field">
-<label>วันเวลาเริ่ม</label>
-<input type="datetime-local" id="eventDate">
-</div>
+<h2>📋 จัดการกิจกรรมที่มีอยู่</h2>
 
-<div class="field">
-<label>วันเวลาปิดรับรายงาน</label>
-<input type="datetime-local" id="closeDate">
-</div>
-
-<div class="field">
-<label>รายละเอียด</label>
-<textarea id="detail" rows="5"></textarea>
-</div>
-
-<button onclick="createNewEvent()">สร้างกิจกรรม</button>
-
-</div>
-
-<h2>จัดการกิจกรรมที่มีอยู่</h2>
-
-<div class="card" id="adminEventList">กำลังโหลด...</div>
+<div id="adminEventList"><p class="muted">กำลังโหลด...</p></div>
 
 </div>
 
 <script src="../js/activityAdmin.js"></script>
-
 </body>
 </html>

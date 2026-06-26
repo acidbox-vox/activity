@@ -1,19 +1,21 @@
 window.onload = loadSummary;
 
-// Set by the print buttons before calling window.print().
-// @media print CSS reads the data-print-mode attribute on <body>
-// to show only the relevant section.
+// Track which dept accordion rows are open
+const openDepts = new Set();
+
 function printMode(mode) {
   document.body.setAttribute("data-print-mode", mode);
+  // Open all dept accordions before printing so content is visible
+  document.querySelectorAll(".dept-row").forEach(r => r.classList.add("open"));
   window.print();
-  // Restore after a tick so the normal page view is unaffected
-  setTimeout(() => document.body.removeAttribute("data-print-mode"), 100);
+  setTimeout(() => {
+    document.body.removeAttribute("data-print-mode");
+  }, 100);
 }
 
 async function loadSummary() {
-
-  const params = new URLSearchParams(location.search);
-  const eventId = params.get("id");
+  const params   = new URLSearchParams(location.search);
+  const eventId  = params.get("id");
   const titleBox = document.getElementById("eventTitle");
 
   if (!eventId) {
@@ -26,12 +28,17 @@ async function loadSummary() {
     const badge = ev.status === "CLOSED"
       ? '<span class="badge badge-closed">ปิดรับแล้ว</span>'
       : '<span class="badge badge-open">เปิดรับ</span>';
-    titleBox.innerHTML = `<h3>${escapeHtml(ev.name)} ${badge}</h3>
-      <div class="muted" id="eventDateLine"></div>`;
+    titleBox.innerHTML = `
+      <div style="display:flex; align-items:center; gap:var(--space-3); flex-wrap:wrap;">
+        <div>
+          <h3 style="margin:0 0 4px;">${escapeHtml(ev.name)} ${badge}</h3>
+          <div class="muted" id="eventDateLine" style="font-size:0.9rem;"></div>
+        </div>
+      </div>`;
     if (ev.eventDate) {
-      document.getElementById("eventDateLine").textContent = formatEventDateRange(ev.eventDate, ev.closeDate);
+      document.getElementById("eventDateLine").textContent =
+        formatEventDateRange(ev.eventDate, ev.closeDate);
     }
-    // Store event name for the print headers
     document.body.dataset.eventName = ev.name;
     document.getElementById("printHeader").textContent =
       `รายงาน: ${ev.name} — พิมพ์เมื่อ ${formatEventDateRange(new Date().toISOString(), null)}`;
@@ -45,81 +52,195 @@ async function loadSummary() {
     return;
   }
 
+  // --- Stat grid ---
   document.getElementById("summary").innerHTML = `
-    <div style="display:flex; gap:32px; flex-wrap:wrap;">
-      <div><div class="stat-label">เข้าร่วม</div><div class="stat-value" style="color:var(--success-600)">${result.join}</div></div>
-      <div><div class="stat-label">ไม่เข้าร่วม</div><div class="stat-value" style="color:var(--danger-600)">${result.absent}</div></div>
-      <div><div class="stat-label">รวมทั้งหมด</div><div class="stat-value">${result.total}</div></div>
+    <div class="stat-grid">
+      <div class="stat-card success">
+        <div class="stat-label">เข้าร่วม</div>
+        <div class="stat-value">${result.join}</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-label">ไม่เข้าร่วม</div>
+        <div class="stat-value">${result.absent}</div>
+      </div>
+      <div class="stat-card neutral">
+        <div class="stat-label">รวมทั้งหมด</div>
+        <div class="stat-value">${result.total}</div>
+      </div>
     </div>
   `;
 
-  renderJoinList(result.joinList || []);
+  renderJoinList(result.joinList   || []);
   renderAbsentList(result.absentList || []);
   renderDeptStatus(result.submittedDepts || [], result.pendingDepts || []);
-
 }
 
+/* ---- helpers ---- */
+function groupByDept(list) {
+  const map = {};
+  list.forEach(p => {
+    if (!map[p.dept]) map[p.dept] = [];
+    map[p.dept].push(p);
+  });
+  return map;
+}
+
+function toggleDept(rowEl) {
+  rowEl.classList.toggle("open");
+}
+
+/* ---- join list — accordion by dept ---- */
 function renderJoinList(joinList) {
   const box = document.getElementById("joinDetail");
-
   if (!joinList.length) {
     box.innerHTML = "<p class='muted'>ยังไม่มีผู้เข้าร่วม</p>";
     return;
   }
 
-  let html = `<h4>รายชื่อผู้เข้าร่วม (${joinList.length} คน)</h4>
-    <table>
-      <tr><th>#</th><th>ชื่อ</th><th>แผนก</th></tr>`;
-  joinList.forEach((p, i) => {
-    html += `<tr>
-      <td class="muted">${i + 1}</td>
-      <td>${escapeHtml(p.name)}</td>
-      <td>${escapeHtml(p.dept)}</td>
-    </tr>`;
+  const byDept = groupByDept(joinList);
+  const depts  = Object.keys(byDept).sort();
+
+  let html = `
+    <div class="report-section-header">
+      <h3>✅ รายชื่อผู้เข้าร่วม</h3>
+      <span class="count-chip">${joinList.length} คน</span>
+    </div>
+    <div class="dept-accordion" id="joinAccordion">
+  `;
+
+  depts.forEach((dept, di) => {
+    const members = byDept[dept];
+    html += `
+      <div class="dept-row dept-submitted" id="join-dept-${di}">
+        <div class="dept-row-header" onclick="toggleDept(this.parentElement)">
+          <div class="dept-row-title">
+            <span>${escapeHtml(dept)}</span>
+          </div>
+          <div class="dept-row-meta">
+            <span>${members.length} คน</span>
+            <span class="badge badge-open">เข้าร่วม</span>
+            <span class="dept-chevron">▼</span>
+          </div>
+        </div>
+        <div class="dept-row-body">
+          <table>
+            <tr><th style="width:44px">#</th><th>ชื่อ</th><th style="width:100px">ลงชื่อ</th><th>หมายเหตุ</th></tr>
+            ${members.map((p, i) => `<tr>
+              <td class="muted">${i + 1}</td>
+              <td>${escapeHtml(p.name)}</td>
+              <td></td>
+              <td></td>
+            </tr>`).join("")}
+          </table>
+          <div class="dept-print-summary" style="margin-top:var(--space-2);font-size:0.82rem;color:var(--ink-400);">
+            สรุป: เข้าร่วม ${members.length} คน
+          </div>
+        </div>
+      </div>
+    `;
   });
-  html += "</table>";
+
+  html += "</div>";
   box.innerHTML = html;
 }
 
+/* ---- absent list — accordion by dept ---- */
 function renderAbsentList(absentList) {
   const box = document.getElementById("absentDetail");
-
   if (!absentList.length) {
     box.innerHTML = "<p class='muted'>ไม่มีรายชื่อผู้ไม่เข้าร่วม</p>";
     return;
   }
 
-  let html = `<h4>รายชื่อผู้ไม่เข้าร่วม (${absentList.length} คน)</h4>
-    <table>
-      <tr><th>#</th><th>ชื่อ</th><th>แผนก</th><th>เหตุผล</th></tr>`;
-  absentList.forEach((p, i) => {
-    html += `<tr>
-      <td class="muted">${i + 1}</td>
-      <td>${escapeHtml(p.name)}</td>
-      <td>${escapeHtml(p.dept)}</td>
-      <td>${escapeHtml(p.reason)}</td>
-    </tr>`;
+  const byDept = groupByDept(absentList);
+  const depts  = Object.keys(byDept).sort();
+
+  let html = `
+    <div class="report-section-header">
+      <h3>❌ รายชื่อผู้ไม่เข้าร่วม</h3>
+      <span class="count-chip">${absentList.length} คน</span>
+    </div>
+    <div class="dept-accordion" id="absentAccordion">
+  `;
+
+  depts.forEach((dept, di) => {
+    const members = byDept[dept];
+    html += `
+      <div class="dept-row dept-pending" id="absent-dept-${di}">
+        <div class="dept-row-header" onclick="toggleDept(this.parentElement)">
+          <div class="dept-row-title">
+            <span>${escapeHtml(dept)}</span>
+          </div>
+          <div class="dept-row-meta">
+            <span>${members.length} คน</span>
+            <span class="badge badge-closed">ไม่เข้าร่วม</span>
+            <span class="dept-chevron">▼</span>
+          </div>
+        </div>
+        <div class="dept-row-body">
+          <table>
+            <tr><th style="width:44px">#</th><th>ชื่อ</th><th style="width:100px">ลงชื่อ</th><th>หมายเหตุ</th></tr>
+            ${members.map((p, i) => `<tr>
+              <td class="muted">${i + 1}</td>
+              <td>${escapeHtml(p.name)}</td>
+              <td></td>
+              <td>${escapeHtml(p.reason || "")}</td>
+            </tr>`).join("")}
+          </table>
+          <div style="margin-top:var(--space-2);font-size:0.82rem;color:var(--ink-400);">
+            สรุป: ไม่เข้าร่วม ${members.length} คน
+          </div>
+        </div>
+      </div>
+    `;
   });
-  html += "</table>";
+
+  html += "</div>";
   box.innerHTML = html;
 }
 
+/* ---- dept submission status — accordion ---- */
 function renderDeptStatus(submittedDepts, pendingDepts) {
   const box = document.getElementById("deptStatus");
   if (!box) return;
 
   const total = submittedDepts.length + pendingDepts.length;
-  let html = `<h4>สถานะการส่งยอดของแผนก (${submittedDepts.length}/${total})</h4>
-    <table><tr><th>แผนก</th><th>สถานะ</th></tr>`;
+  let html = `
+    <div class="report-section-header">
+      <h3>📋 สถานะแผนกส่งยอด</h3>
+      <span class="count-chip">${submittedDepts.length}/${total}</span>
+    </div>
+    <div class="dept-accordion">
+  `;
 
-  submittedDepts.forEach(d => {
-    html += `<tr><td>${escapeHtml(d)}</td><td><span class="badge badge-open">ส่งแล้ว</span></td></tr>`;
+  submittedDepts.forEach((d, i) => {
+    html += deptStatusRow(d, true, i);
   });
-  pendingDepts.forEach(d => {
-    html += `<tr><td>${escapeHtml(d)}</td><td><span class="badge badge-pending">ยังไม่ส่ง</span></td></tr>`;
+  pendingDepts.forEach((d, i) => {
+    html += deptStatusRow(d, false, submittedDepts.length + i);
   });
 
-  html += "</table>";
+  html += `</div>`;
   if (!total) html += "<p class='muted'>ไม่มีข้อมูลแผนก</p>";
   box.innerHTML = html;
+}
+
+function deptStatusRow(dept, submitted, idx) {
+  const cls    = submitted ? "dept-submitted" : "dept-pending";
+  const badge  = submitted
+    ? '<span class="badge badge-open">ส่งแล้ว</span>'
+    : '<span class="badge badge-pending">ยังไม่ส่ง</span>';
+  return `
+    <div class="dept-row ${cls}" id="dept-status-${idx}">
+      <div class="dept-row-header" onclick="toggleDept(this.parentElement)">
+        <div class="dept-row-title"><span>${escapeHtml(dept)}</span></div>
+        <div class="dept-row-meta">${badge}<span class="dept-chevron">▼</span></div>
+      </div>
+      <div class="dept-row-body">
+        <p style="margin:var(--space-2) 0 0; font-size:0.88rem; color:var(--ink-400);">
+          ${submitted ? "แผนกนี้ส่งยอดเรียบร้อยแล้ว" : "แผนกนี้ยังไม่ได้ส่งยอด"}
+        </p>
+      </div>
+    </div>
+  `;
 }
