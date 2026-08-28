@@ -669,6 +669,16 @@ td.col-name { white-space: nowrap; } /* never break mid-name */
     font-weight: 700;
   }
 
+  /* ---- report-section wrapper cards: strip padding/border to save paper ---- */
+  .report-section {
+    border: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   /* ---- print-only per-dept page header ---- */
   .print-header {
     display: none; /* replaced by per-dept headers below */
@@ -704,8 +714,9 @@ td.col-name { white-space: nowrap; } /* never break mid-name */
     page-break-before: always;
     break-before: page;
   }
-  /* First dept in first section — don't add a blank page before it */
-  .dept-accordion .dept-row:first-child {
+  /* First VISIBLE dept-row in each printed section — don't add a blank page before it */
+  .dept-accordion .dept-row:first-child,
+  .dept-row.print-first-in-section {
     page-break-before: auto;
     break-before: auto;
   }

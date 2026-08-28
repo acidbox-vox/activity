@@ -47,9 +47,13 @@ function confirmPrint() {
 function printMode(mode, deptFilter) {
   document.body.setAttribute("data-print-mode", mode);
 
-  // Mark which dept-rows are included
+  // Which report-sections will actually be visible for this mode
+  const sectionsShown = mode === "all" ? ["join", "absent", "byDept", "dept"] : [mode];
+
+  // Mark which dept-rows are included (per dept filter), and clear any stale marker
   document.querySelectorAll(".dept-row").forEach(r => {
     r.classList.add("open");
+    r.classList.remove("print-first-in-section");
     const deptName = r.dataset.dept || "";
     if (deptFilter) {
       r.dataset.printInclude = deptFilter.has(deptName) ? "1" : "0";
@@ -58,11 +62,25 @@ function printMode(mode, deptFilter) {
     }
   });
 
+  // For each visible section, find the first row that will actually be printed
+  // (skipping any filtered-out rows ahead of it) and let it start on the
+  // current page instead of forcing a page break before it.
+  sectionsShown.forEach(sectionName => {
+    const section = document.querySelector(`.report-section[data-section="${sectionName}"]`);
+    if (!section) return;
+    const firstVisible = [...section.querySelectorAll(".dept-row")]
+      .find(r => r.dataset.printInclude !== "0");
+    if (firstVisible) firstVisible.classList.add("print-first-in-section");
+  });
+
   window.print();
 
   setTimeout(() => {
     document.body.removeAttribute("data-print-mode");
-    document.querySelectorAll(".dept-row").forEach(r => delete r.dataset.printInclude);
+    document.querySelectorAll(".dept-row").forEach(r => {
+      delete r.dataset.printInclude;
+      r.classList.remove("print-first-in-section");
+    });
   }, 100);
 }
 
