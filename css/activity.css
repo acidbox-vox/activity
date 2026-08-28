@@ -391,6 +391,21 @@ table tr:hover td { background: var(--paper-50); }
 /* submitted / pending indicators */
 .dept-submitted { border-left: 3px solid var(--teal-500); }
 .dept-pending   { border-left: 3px solid var(--amber-600); }
+.dept-mixed     { border-left: 3px solid var(--indigo-500); }
+
+/* ---------- by-dept view: join / absent subsections ------ */
+.dept-subsection { margin-bottom: var(--space-3); }
+.dept-subsection:last-of-type { margin-bottom: 0; }
+.dept-subsection-header {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin: var(--space-2) 0 var(--space-2);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.dept-subsection-header.join-subsection   { background: var(--success-050); color: var(--success-600); }
+.dept-subsection-header.absent-subsection { background: var(--danger-050);  color: var(--danger-600);  }
 
 /* ---------- signature table column widths ---------- */
 col.col-num  { width: 40px; }
@@ -672,6 +687,9 @@ td.col-name { white-space: nowrap; } /* never break mid-name */
   body[data-print-mode="dept"]   .report-section[data-section="dept"]   { display: block !important; }
   body[data-print-mode="dept"]   .report-section:not([data-section="dept"])   { display: none !important; }
 
+  body[data-print-mode="byDept"] .report-section[data-section="byDept"] { display: block !important; }
+  body[data-print-mode="byDept"] .report-section:not([data-section="byDept"]) { display: none !important; }
+
   /* ---- dept accordion → flat blocks, each on its own page ---- */
   .dept-accordion {
     display: block !important;
@@ -721,6 +739,29 @@ td.col-name { white-space: nowrap; } /* never break mid-name */
     color: #666;
     margin-bottom: 3pt;
   }
+
+  /* ---- by-dept view: join / absent subsections ---- */
+  .dept-subsection { margin-bottom: 4pt; }
+  .dept-subsection-header {
+    display: block !important;
+    font-size: 9pt;
+    font-weight: 700;
+    padding: 2pt 5pt;
+    margin: 8pt 0 3pt;
+    border-radius: 0;
+  }
+  .dept-subsection-header.join-subsection {
+    background: #eafaf3 !important;
+    color: #000 !important;
+    border-left: 3pt solid #38a169;
+  }
+  .dept-subsection-header.absent-subsection {
+    background: #fdeeee !important;
+    color: #000 !important;
+    border-left: 3pt solid #e53e3e;
+  }
+  /* first subsection shouldn't add extra top gap under the dept header */
+  .dept-row-body .dept-subsection:first-of-type .dept-subsection-header { margin-top: 0; }
 
   /* ---- tables ---- */
   table {

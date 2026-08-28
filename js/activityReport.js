@@ -10,6 +10,7 @@ function openPrintDialog(mode) {
   _printMode = mode;
   const label = mode === "join" ? "ผู้เข้าร่วม"
               : mode === "absent" ? "ผู้ไม่เข้าร่วม"
+              : mode === "byDept" ? "แยกแผนก (เข้าร่วม + ไม่เข้าร่วม)"
               : "ทั้งหมด";
   document.getElementById("dialogTitle").textContent = `เลือกแผนกที่ต้องการพิมพ์ — ${label}`;
 
@@ -122,6 +123,7 @@ async function loadSummary() {
 
   renderJoinList(joinList);
   renderAbsentList(absentList);
+  renderByDeptList(joinList, absentList);
   renderDeptStatus(result.submittedDepts || [], result.pendingDepts || []);
 }
 
@@ -235,6 +237,66 @@ function renderAbsentList(absentList) {
           <div class="dept-print-page-header">${escapeHtml(eventName)} — ผู้ไม่เข้าร่วม — แผนก ${escapeHtml(dept)}</div>
           ${deptTable(members, true)}
           <div class="dept-print-summary">สรุป: ไม่เข้าร่วม ${members.length} คน</div>
+        </div>
+      </div>`;
+  });
+
+  html += "</div>";
+  box.innerHTML = html;
+}
+
+// ── By-dept list — each dept shows both join & absent ─────
+function renderByDeptList(joinList, absentList) {
+  const box = document.getElementById("byDeptDetail");
+  if (!box) return;
+  if (!joinList.length && !absentList.length) {
+    box.innerHTML = "<p class='muted'>ยังไม่มีข้อมูล</p>";
+    return;
+  }
+
+  const byJoinDept   = groupByDept(joinList);
+  const byAbsentDept = groupByDept(absentList);
+  const deptSet = new Set([...Object.keys(byJoinDept), ...Object.keys(byAbsentDept)]);
+  const depts = [...deptSet].sort();
+  const eventName = document.body.dataset.eventName || "";
+
+  let html = `
+    <div class="report-section-header">
+      <h3>🗂 ดูแยกตามแผนก (เข้าร่วม + ไม่เข้าร่วม)</h3>
+      <span class="count-chip">${depts.length} แผนก</span>
+    </div>
+    <div class="dept-accordion">`;
+
+  depts.forEach((dept, di) => {
+    const joinMembers   = byJoinDept[dept]   || [];
+    const absentMembers = byAbsentDept[dept] || [];
+    const total = joinMembers.length + absentMembers.length;
+
+    html += `
+      <div class="dept-row dept-mixed" id="byDept-dept-${di}" data-dept="${escapeHtml(dept)}">
+        <div class="dept-row-header" onclick="toggleDept(this.parentElement)">
+          <div class="dept-row-title"><span>${escapeHtml(dept)}</span></div>
+          <div class="dept-row-meta">
+            <span>${total} คน</span>
+            <span class="badge badge-open">เข้าร่วม ${joinMembers.length}</span>
+            <span class="badge badge-closed">ไม่เข้าร่วม ${absentMembers.length}</span>
+            <span class="dept-chevron">▼</span>
+          </div>
+        </div>
+        <div class="dept-row-body">
+          <div class="dept-print-page-header">${escapeHtml(eventName)} — แยกแผนก — แผนก ${escapeHtml(dept)}</div>
+
+          <div class="dept-subsection">
+            <div class="dept-subsection-header join-subsection">✅ ผู้เข้าร่วม (${joinMembers.length} คน)</div>
+            ${joinMembers.length ? deptTable(joinMembers, false) : "<p class='muted' style='margin:8px 0;'>ไม่มีผู้เข้าร่วม</p>"}
+          </div>
+
+          <div class="dept-subsection">
+            <div class="dept-subsection-header absent-subsection">❌ ผู้ไม่เข้าร่วม (${absentMembers.length} คน)</div>
+            ${absentMembers.length ? deptTable(absentMembers, true) : "<p class='muted' style='margin:8px 0;'>ไม่มีผู้ไม่เข้าร่วม</p>"}
+          </div>
+
+          <div class="dept-print-summary">สรุป: เข้าร่วม ${joinMembers.length} คน / ไม่เข้าร่วม ${absentMembers.length} คน / รวม ${total} คน</div>
         </div>
       </div>`;
   });

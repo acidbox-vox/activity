@@ -45,6 +45,9 @@
 <!-- absent list -->
 <div class="card report-section" id="absentDetail" data-section="absent"></div>
 
+<!-- view by dept (join + absent together) -->
+<div class="card report-section" id="byDeptDetail" data-section="byDept"></div>
+
 <!-- dept status -->
 <div class="card report-section" id="deptStatus" data-section="dept"></div>
 
@@ -53,6 +56,7 @@
   <span class="action-label">🖨 พิมพ์</span>
   <button class="print-btn" onclick="openPrintDialog('join')">ผู้เข้าร่วม</button>
   <button class="print-btn" onclick="openPrintDialog('absent')">ผู้ไม่เข้าร่วม</button>
+  <button class="print-btn" onclick="openPrintDialog('byDept')">แยกแผนก</button>
   <button class="print-btn" onclick="printMode('dept')">สถานะแผนก</button>
   <button class="print-btn" onclick="openPrintDialog('all')">ทั้งหมด</button>
   <div style="flex:1"></div>
