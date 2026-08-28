@@ -50,8 +50,11 @@ function printMode(mode, deptFilter) {
   // Which report-sections will actually be visible for this mode
   const sectionsShown = mode === "all" ? ["join", "absent", "byDept", "dept"] : [mode];
 
-  // Mark which dept-rows are included (per dept filter), and clear any stale marker
+  // Mark which dept-rows are included (per dept filter), force them open so
+  // print can render their bodies, but remember rows that were already
+  // closed on screen so we can restore that state afterward.
   document.querySelectorAll(".dept-row").forEach(r => {
+    if (!r.classList.contains("open")) r.dataset.wasClosed = "1";
     r.classList.add("open");
     r.classList.remove("print-first-in-section");
     const deptName = r.dataset.dept || "";
@@ -80,6 +83,11 @@ function printMode(mode, deptFilter) {
     document.querySelectorAll(".dept-row").forEach(r => {
       delete r.dataset.printInclude;
       r.classList.remove("print-first-in-section");
+      // Collapse back any row that wasn't open before we printed
+      if (r.dataset.wasClosed === "1") {
+        r.classList.remove("open");
+        delete r.dataset.wasClosed;
+      }
     });
   }, 100);
 }
@@ -158,6 +166,12 @@ function groupByDept(list) {
 
 function toggleDept(rowEl) { rowEl.classList.toggle("open"); }
 
+function collapseAllDepts(btn) {
+  const section = btn.closest(".report-section");
+  if (!section) return;
+  section.querySelectorAll(".dept-row.open").forEach(r => r.classList.remove("open"));
+}
+
 function deptTable(members, isAbsent) {
   const rows = members.map((p, i) => `<tr>
     <td class="col-num">${i + 1}</td>
@@ -195,7 +209,10 @@ function renderJoinList(joinList) {
   let html = `
     <div class="report-section-header">
       <h3>✅ รายชื่อผู้เข้าร่วม</h3>
-      <span class="count-chip">${joinList.length} คน</span>
+      <div style="display:flex; align-items:center; gap:var(--space-2);">
+        <span class="count-chip">${joinList.length} คน</span>
+        <button class="secondary" style="font-size:0.78rem; padding:4px 10px;" onclick="collapseAllDepts(this)">🔽 พับทั้งหมด</button>
+      </div>
     </div>
     <div class="dept-accordion">`;
 
@@ -235,7 +252,10 @@ function renderAbsentList(absentList) {
   let html = `
     <div class="report-section-header">
       <h3>❌ รายชื่อผู้ไม่เข้าร่วม</h3>
-      <span class="count-chip">${absentList.length} คน</span>
+      <div style="display:flex; align-items:center; gap:var(--space-2);">
+        <span class="count-chip">${absentList.length} คน</span>
+        <button class="secondary" style="font-size:0.78rem; padding:4px 10px;" onclick="collapseAllDepts(this)">🔽 พับทั้งหมด</button>
+      </div>
     </div>
     <div class="dept-accordion">`;
 
@@ -281,7 +301,10 @@ function renderByDeptList(joinList, absentList) {
   let html = `
     <div class="report-section-header">
       <h3>🗂 ดูแยกตามแผนก (เข้าร่วม + ไม่เข้าร่วม)</h3>
-      <span class="count-chip">${depts.length} แผนก</span>
+      <div style="display:flex; align-items:center; gap:var(--space-2);">
+        <span class="count-chip">${depts.length} แผนก</span>
+        <button class="secondary" style="font-size:0.78rem; padding:4px 10px;" onclick="collapseAllDepts(this)">🔽 พับทั้งหมด</button>
+      </div>
     </div>
     <div class="dept-accordion">`;
 
