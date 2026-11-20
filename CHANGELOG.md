@@ -49,6 +49,12 @@
 - **pages/activity-form.html** — เพิ่มปุ่ม "ย้อนกลับ" ด้วยเพื่อความสอดคล้องในการนำทาง
 - **css/activity.css** — เพิ่ม `.action-bar`, `.stat-label`/`.stat-value`, `.print-header`, และกฎ `@media print` ใหม่ทั้งหมดที่ควบคุมการแสดงผลตาม print mode
 
+## เพิ่มปุ่มพิมพ์รายชื่อทุกคน ไม่ต้องรอส่งยอด (รอบล่าสุด)
+
+- **backend/Reports.gs** — เพิ่ม `getAllRoster()` ดึงรายชื่อทุกแผนกทุกคนจากชีต Departments โดยตรง (ไม่พึ่ง Attendance/EventSubmit) **backend/Code.gs** — เพิ่ม action `getAllRoster`
+- **pages/activity-report.html** + **js/activityReport.js** — เพิ่มปุ่ม "รายชื่อทุกคน (ไม่ต้องรอส่งยอด)" โหลดรายชื่อตอนกดครั้งแรก เลือกแผนกที่จะพิมพ์ได้ พิมพ์แยกแผนกละหน้า มีช่องลงชื่อ/หมายเหตุ
+- **css/activity.css** — กฎ `@media print` สำหรับโหมด `roster` (ไม่ปะปนกับโหมดอื่น)
+
 ## วิธีติดตั้ง
 
 1. **Frontend**: เอาทั้งโฟลเดอร์ `activity-system/` (ยกเว้น `backend/`) ไปแทนที่ไฟล์เดิมบนเว็บได้เลย โครงสร้างไฟล์เหมือนเดิมทุกอย่าง

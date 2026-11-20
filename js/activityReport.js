@@ -3,19 +3,31 @@ window.onload = loadSummary;
 // Dept lists for print dialog
 let _allDepts  = [];   // all dept names from current data
 let _printMode = "all"; // current print type
+let _roster    = null;  // full roster from Departments sheet (loaded on demand)
 
 // ── Print dialog ────────────────────────────────────────
-function openPrintDialog(mode) {
+async function openPrintDialog(mode) {
   if (mode === "dept") { printMode("dept"); return; } // dept status has no dept filter
+
+  // Roster mode: load every department + person from the Departments sheet,
+  // independent of whether any unit has submitted attendance yet.
+  let deptList = _allDepts;
+  if (mode === "roster") {
+    const ok = await ensureRosterLoaded();
+    if (!ok) return;
+    deptList = _roster.map(d => d.dept);
+  }
+
   _printMode = mode;
-  const label = mode === "join" ? "ผู้เข้าร่วม"
+  const label = mode === "roster" ? "รายชื่อทุกคน (ไม่ต้องรอส่งยอด)"
+              : mode === "join" ? "ผู้เข้าร่วม"
               : mode === "absent" ? "ผู้ไม่เข้าร่วม"
               : mode === "byDept" ? "แยกแผนก (เข้าร่วม + ไม่เข้าร่วม)"
               : "ทั้งหมด";
   document.getElementById("dialogTitle").textContent = `เลือกแผนกที่ต้องการพิมพ์ — ${label}`;
 
   const list = document.getElementById("deptCheckboxList");
-  list.innerHTML = _allDepts.map(d => `
+  list.innerHTML = deptList.map(d => `
     <label style="display:flex; align-items:center; gap:var(--space-2); cursor:pointer; font-size:0.95rem;">
       <input type="checkbox" class="dept-chk" value="${escapeHtml(d)}" checked
              style="width:16px; height:16px; accent-color:var(--indigo-500);">
@@ -90,6 +102,47 @@ function printMode(mode, deptFilter) {
       }
     });
   }, 100);
+}
+
+// ── Full roster (every person in every department) ───────
+async function ensureRosterLoaded() {
+  if (_roster) return true;
+  const res = await api("getAllRoster");
+  if (!res.success) {
+    alert("โหลดรายชื่อทั้งหมดไม่สำเร็จ: " + (res.message || res.error || ""));
+    return false;
+  }
+  if (!res.data || !res.data.length) {
+    alert("ไม่พบรายชื่อในชีต Departments");
+    return false;
+  }
+  _roster = res.data;
+  renderRoster(_roster);
+  return true;
+}
+
+function renderRoster(roster) {
+  const box = document.getElementById("rosterDetail");
+  if (!box) return;
+  const eventName = document.body.dataset.eventName || "";
+
+  let html = '<div class="dept-accordion">';
+  roster.forEach((d, di) => {
+    const members = d.employees.map(n => ({ name: n }));
+    html += `
+      <div class="dept-row dept-mixed" id="roster-dept-${di}" data-dept="${escapeHtml(d.dept)}">
+        <div class="dept-row-header">
+          <div class="dept-row-title"><span>${escapeHtml(d.dept)}</span></div>
+        </div>
+        <div class="dept-row-body">
+          <div class="dept-print-page-header">${escapeHtml(eventName)} — รายชื่อทั้งหมด — แผนก ${escapeHtml(d.dept)}</div>
+          ${deptTable(members, false)}
+          <div class="dept-print-summary">สรุป: รวม ${members.length} คน</div>
+        </div>
+      </div>`;
+  });
+  html += "</div>";
+  box.innerHTML = html;
 }
 
 // ── Load summary ─────────────────────────────────────────

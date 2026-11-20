@@ -48,6 +48,9 @@
 <!-- view by dept (join + absent together) -->
 <div class="card report-section" id="byDeptDetail" data-section="byDept"></div>
 
+<!-- full roster (print-only; loaded on demand, no submission needed) -->
+<div class="card report-section print-only-section" id="rosterDetail" data-section="roster"></div>
+
 <!-- dept status -->
 <div class="card report-section" id="deptStatus" data-section="dept"></div>
 
@@ -59,6 +62,7 @@
   <button class="print-btn" onclick="openPrintDialog('byDept')">แยกแผนก</button>
   <button class="print-btn" onclick="printMode('dept')">สถานะแผนก</button>
   <button class="print-btn" onclick="openPrintDialog('all')">ทั้งหมด</button>
+  <button class="print-btn" onclick="openPrintDialog('roster')" title="พิมพ์รายชื่อทุกคนทุกแผนกจากชีต Departments โดยไม่ต้องรอให้หน่วยส่งยอด">รายชื่อทุกคน (ไม่ต้องรอส่งยอด)</button>
   <div style="flex:1"></div>
   <button class="secondary" onclick="location.href='activities.html'">🏠 หน้าแรก</button>
 </div>

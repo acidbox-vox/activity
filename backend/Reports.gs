@@ -45,3 +45,27 @@ function getEventSummary(eventId) {
     pendingDepts
   };
 }
+
+// Full roster of every department straight from the "Departments" sheet
+// (col A = แผนก/หน่วย, col B = ชื่อ). Does NOT depend on Attendance or
+// EventSubmit, so it works even when no department has submitted yet.
+// Returns departments in sheet order, each with its people in sheet order.
+function getAllRoster() {
+  const sh = SpreadsheetApp.getActive().getSheetByName("Departments");
+  const rows = sh.getDataRange().getValues();
+  rows.shift();
+
+  const order = [];
+  const map = {};
+  rows.forEach(r => {
+    const dept = String(r[0] || "").trim();
+    const name = String(r[1] || "").trim();
+    if (!dept || !name) return;
+    if (!map[dept]) { map[dept] = []; order.push(dept); }
+    map[dept].push(name);
+  });
+
+  const data = order.map(d => ({ dept: d, employees: map[d] }));
+  const total = data.reduce((n, d) => n + d.employees.length, 0);
+  return { success: true, data, total };
+}

@@ -14,6 +14,7 @@ function doPost(e) {
       case "saveAttendance":         result = saveAttendance(req); break;
       case "getAttendance":          result = getAttendance(req); break;
       case "getEventSummary":        result = getEventSummary(req.eventId); break;
+      case "getAllRoster":           result = getAllRoster(); break;
       case "closeEvent":             result = closeEvent(req.eventId, req.adminCode); break;
       case "reopenEvent":            result = reopenEvent(req.eventId, req.adminCode); break;
       default: result = { success: false, message: "Unknown Action" };

@@ -576,6 +576,9 @@ td.col-name { white-space: nowrap; } /* never break mid-name */
   white-space: nowrap;
 }
 
+/* ---------- print-only sections (e.g. full roster) ---------- */
+.print-only-section { display: none; }
+
 /* ---------- print-only header ---------- */
 .print-header {
   display: none;
@@ -702,6 +705,13 @@ td.col-name { white-space: nowrap; } /* never break mid-name */
   body[data-print-mode="byDept"] .report-section[data-section="byDept"] { display: block !important; }
   body[data-print-mode="byDept"] .report-section:not([data-section="byDept"]) { display: none !important; }
 
+  /* roster (everyone, no submission needed): only ever printed on its own */
+  body[data-print-mode="roster"] .report-section[data-section="roster"] { display: block !important; }
+  body[data-print-mode="roster"] .report-section:not([data-section="roster"]) { display: none !important; }
+  body:not([data-print-mode="roster"]) .report-section[data-section="roster"] { display: none !important; }
+  /* roster mode has no attendance numbers, so drop the stats strip */
+  body[data-print-mode="roster"] #summary { display: none !important; }
+
   /* ---- dept accordion → flat blocks, each on its own page ---- */
   .dept-accordion {
     display: block !important;
@@ -803,6 +813,8 @@ td.col-name { white-space: nowrap; } /* never break mid-name */
   td.col-name { white-space: nowrap; }
   .col-sign { width: 110pt; } /* signature — wider */
   .col-note { width: 60pt; }  /* remark — shorter */
+
+  tr { page-break-inside: avoid; break-inside: avoid; }
 
   /* hide dept-rows that were excluded from print dialog selection */
   .dept-row[data-print-include="0"] { display: none !important; }
